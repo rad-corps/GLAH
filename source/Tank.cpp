@@ -81,7 +81,7 @@ Tank::Update(float delta_)
 	rot *= delta_;
 
 	gfx->MoveSpriteRelative(spriteID, tankX , tankY, rot );
-	gfx->RotateSprite(turretSprite, turret_rot);
+	gfx->RotateSpriteRelative(turretSprite, turret_rot);
 
 	timeSinceReload += delta_;
 }

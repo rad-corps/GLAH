@@ -8,15 +8,20 @@
 class TankShell : public GLAHEntity
 {
 public:
-	TankShell(Vector3 pos_, float dir_);
+	void Shoot(Vector3 pos_, float dir_);
+	TankShell();
 	~TankShell(void);
 
 	void Update(float delta_);
 	void Draw();
+	bool Active();
+	void Reset();
 
 private:
 	GLAHGraphics* gfx;
 	Vector3 velocity;
 	Vector3 position;
+	bool active;
+	float activeFor;
 };
 

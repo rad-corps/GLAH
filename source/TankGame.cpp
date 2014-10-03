@@ -10,6 +10,11 @@ TankGame::TankGame() : GLAH(SCREEN_WIDTH, SCREEN_HEIGHT, true, "GLAH Test Tanks"
 	tank.AddObserver(this);
 	gfx = GLAHGraphics::Instance();
 	inpt = GLAHInput::Instance();	
+
+	for ( int i = 0; i < SHELLS_IN_MEMORY; ++i )
+	{
+		shells.push_back(TankShell());
+	}
 }
 
 TankGame::~TankGame()
@@ -32,7 +37,12 @@ TankGame::Draw()
 void
 TankGame::OnShoot(Vector3 pos_, float dir_)
 {
-	shells.push_back(TankShell(pos_, dir_));
+	int shellNum = 0;
+	while (shells[shellNum].Active())
+	{
+		++shellNum;
+	}
+	shells[shellNum].Shoot(pos_, dir_);
 }
 
 void 

@@ -155,6 +155,28 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_, float x_, float y_, float 
 	DrawSprite(spriteID_);
 }
 
+//GLAH::DrawSprite
+//spriteID_		: The ID of the sprite to draw
+//x_			: the absolute (world space) x coordinate to draw 
+//y_			: the absolute (world space) y coordinate to draw 
+//rotation_		: rotation expressed as radians
+void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
+{
+	//translation/position matrix
+	Matrix3x3 translationMat;
+	translationMat.setupTranslation(Vector3(x_, y_, 0.0));
+
+	//rotation matrix
+	Matrix3x3 rotationMat;
+	rotationMat.setupRotation(spriteList[spriteID_].rotation);	
+
+	//transform
+	Matrix3x3 transform = rotationMat * translationMat;
+
+	//set the transform of the sprite
+	spriteList[spriteID_].translation = transform;
+}
+
 void GLAHGraphics::DrawEntity(GLAHEntity* entity_)
 {
 	//Call DrawSprite
@@ -194,9 +216,14 @@ void GLAHGraphics::MoveSpriteRelative(unsigned int spriteID_, float xMovement_, 
 	return;
 }
 
-void GLAHGraphics::RotateSprite(unsigned int a_uiSpriteID, float a_fRotation )
+void GLAHGraphics::RotateSpriteRelative(unsigned int a_uiSpriteID, float a_fRotation )
 {
 	spriteList[a_uiSpriteID].rotation += a_fRotation;
+}
+
+void GLAHGraphics::RotateSprite(unsigned int a_uiSpriteID, float a_fRotation )
+{
+	spriteList[a_uiSpriteID].rotation = a_fRotation;
 }
 
 

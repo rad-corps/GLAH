@@ -41,7 +41,8 @@ public:
 
 	GLAHEntity		GetGLAHEntity			(unsigned int spriteID_);
 
-	void			RotateSprite			( unsigned int a_uiSpriteID, float a_fRotation );
+	void			RotateSpriteRelative			( unsigned int a_uiSpriteID, float a_fRotation );
+	void			RotateSprite					( unsigned int a_uiSpriteID, float a_fRotation );
 
 	unsigned int	DuplicateSprite			( unsigned int a_uiSpriteID );
 	void			DestroySprite			( unsigned int a_uiSpriteID );
