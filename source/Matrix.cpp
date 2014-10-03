@@ -106,9 +106,9 @@ void Matrix3x3::setPosition		(Vector3 pos_)
 	matrix[2][1] = pos_.y;
 }
 
-Vector2 Matrix3x3::Direction()
+Vector3 Matrix3x3::Direction()
 {
-	return Vector2 (matrix[0][0],matrix[0][1]);
+	return Vector3 (matrix[0][0],matrix[0][1], 0);
 }
 
 Vector3 Matrix3x3::getPosition()

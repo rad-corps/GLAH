@@ -43,10 +43,17 @@ struct Vector3
 	Vector3();
 	Vector3(float x_, float y_, float z_);
 
+	float GetAngle();
+	void SetAngle(float angle);
+
+	void Normalise();
+
 	Vector3 operator*(float scalar_);
 	void operator+=(Vector3 vec_);
 	Vector3 operator-(Vector3 vec_);
 	float magnitude();
+	
+	const float GetMagnitude();
 	std::string ToString();
 
 	float x, y, z;

@@ -13,5 +13,10 @@ const int TANK_SPRITE_W = 256;
 const int TANK_SPRITE_H = 128;
 const float RELOAD_TIME = 1.0f; //seconds
 
+//TANK SHELL
+const int SHELL_W = 128;
+const int SHELL_H = 32;
+const int SHELL_VELOCITY = 1500;
+
 //MATH
 const float PI = 3.14159265f;

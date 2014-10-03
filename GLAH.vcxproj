@@ -22,6 +22,7 @@
     <ClCompile Include="source\TankGame.cpp" />
     <ClCompile Include="source\Vector.cpp" />
     <ClCompile Include="source\Tank.cpp" />
+    <ClCompile Include="source\TankShell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CONSTS.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="include\Vertex.h" />
     <ClInclude Include="include\Tank.h" />
+    <ClInclude Include="include\TankShell.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{68E0BC72-EE41-47C1-AA0E-83EE7612C16B}</ProjectGuid>

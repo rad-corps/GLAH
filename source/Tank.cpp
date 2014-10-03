@@ -20,10 +20,10 @@ Tank::Tank(void)
 		TANK_SPRITE_W, TANK_SPRITE_H,				//width and height of sprite
 		-0, 0,										//initial x/y position (relative to parent)
 		spriteID,									//the parent object to bind to
-		Vector3(100,64,0)							//rotation origin offset
+		Vector3(150,64,0)							//rotation origin offset
 		); 
 
-	gfx->RotateSprite(turretSprite, PI);
+	//gfx->RotateSprite(turretSprite, PI);
 
 	timeSinceReload = RELOAD_TIME;
 }
@@ -41,27 +41,27 @@ Tank::Update(float delta_)
 	float tankY = 0.0f;
 	float turret_rot = 0.f;
 
-	if ( inpt->IsKeyDown(KEY_UP) )
+	if ( inpt->IsKeyDown(KEY_W) )
 	{
 		tankX += -FWD_SPEED;
 	}
-	if ( inpt->IsKeyDown(KEY_DOWN))
+	if ( inpt->IsKeyDown(KEY_S))
 	{
 		tankX += BKWD_SPEED;
 	}
-	if ( inpt->IsKeyDown(KEY_LEFT))
+	if ( inpt->IsKeyDown(KEY_A))
 	{
 		rot += -ROT_SPEED;
 	}
-	if ( inpt->IsKeyDown(KEY_RIGHT))
+	if ( inpt->IsKeyDown(KEY_D))
 	{
 		rot += ROT_SPEED;
 	}
-	if ( inpt->IsKeyDown(KEY_A))
+	if ( inpt->IsKeyDown(KEY_LEFT))
 	{
 		turret_rot += -TURRET_ROT_SPEED;
 	}
-	if ( inpt->IsKeyDown(KEY_S))
+	if ( inpt->IsKeyDown(KEY_RIGHT))
 	{
 		turret_rot += TURRET_ROT_SPEED;
 	}
@@ -70,7 +70,7 @@ Tank::Update(float delta_)
 		//logic : can we shoot? ammo, reload time
 		if ( timeSinceReload > RELOAD_TIME )
 		{
-			observer->OnShoot();
+			observer->OnShoot(gfx->GetGLAHEntity(spriteID).translation.getPosition(), gfx->GetGLAHEntity(turretSprite).rotation + gfx->GetGLAHEntity(spriteID).rotation);
 			timeSinceReload = 0.0f;
 		}
 	}

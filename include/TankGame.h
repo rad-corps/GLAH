@@ -5,6 +5,10 @@
 #include "GLAHGraphics.h"
 #include "GLAHInput.h"
 #include "TankObserver.h"
+#include "TankShell.h"
+#include <vector>
+
+using namespace std;
 
 
 class TankGame : public GLAH, public TankObserver //implements GLAH interface
@@ -15,15 +19,14 @@ public:
 	TankGame();
 	~TankGame();
 
-	virtual void OnShoot();
+	virtual void OnShoot(Vector3 pos_, float dir_);
 
 private:
-	unsigned int tankSprite;
-	unsigned int turretSprite;
 
 	//must be a pointer to be classwide (private ctor)
 	GLAHGraphics* gfx;
 	GLAHInput* inpt;
 
 	Tank tank;
+	vector<TankShell> shells;
 };

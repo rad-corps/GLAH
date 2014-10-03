@@ -23,16 +23,26 @@ void
 TankGame::Draw()
 {
 	tank.Draw();
+	for ( int i = 0; i < shells.size(); ++i )
+	{
+		shells[i].Draw();
+	}
 }
 
 void
-TankGame::OnShoot()
+TankGame::OnShoot(Vector3 pos_, float dir_)
 {
-	cout << "OnShoot" << endl;
+	shells.push_back(TankShell(pos_, dir_));
 }
 
 void 
 TankGame::Update(float delta_)
 {	
 	tank.Update(delta_);	
+	
+	//update shells
+	for ( int i = 0; i < shells.size(); ++i )
+	{
+		shells[i].Update(delta_);
+	}
 }

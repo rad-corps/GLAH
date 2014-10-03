@@ -33,7 +33,7 @@ struct Matrix3x3
 	void setPosition		(Vector3 pos_);
 	Vector3	getPosition		();
 	void move				(Vector3 movement_);
-	Vector2					Direction();
+	Vector3	Direction		();
 	Vector3 operator*		(Vector3 vec_);
 	Matrix3x3 operator*		(Matrix3x3 mat3x3_);
 	Matrix3x3				Transpose();

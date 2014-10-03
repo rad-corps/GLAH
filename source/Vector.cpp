@@ -174,6 +174,33 @@ Vector2 Vector2::Lerp(Vector2 origin, Vector2 velocity, float scalar)	//scalar b
 Vector3::Vector3() : x(0.0), y(0.0), z(0.0){}
 Vector3::Vector3(float x_, float y_, float z_): x(x_), y(y_), z(z_){}
 
+float Vector3::GetAngle()
+{
+	return atan2(this->y, this->x);
+}
+
+void Vector3::SetAngle(float angle)
+{
+	float length = this->GetMagnitude();
+	this->x = cos(angle) * length;
+	this->y = sin(angle) * length;
+}
+
+const float Vector3::GetMagnitude()
+{
+	return sqrt(x * x + y * y + z * z);
+}
+
+void Vector3::Normalise()
+{
+	float mag = this->GetMagnitude();
+	x /= mag;
+	y /= mag;	
+	z /= mag;	
+}
+
+
+
 Vector3 Vector3::operator*(float scalar_)
 {
 	Vector3 ret; 
