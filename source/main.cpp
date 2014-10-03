@@ -25,6 +25,9 @@ int main()
 	return 0; 
 #endif
 	
+	cout << "WASD       \tManoeuvre Tank" << endl; 
+	cout << "Left/Right \tRotate Turret" << endl;
+	cout << "Space      \tFire" << endl;
 
 	//GL Adam Hulbert Library (Gullah)
 	TankGame game;
