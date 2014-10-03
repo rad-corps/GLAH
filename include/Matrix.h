@@ -37,6 +37,7 @@ struct Matrix3x3
 	Vector3 operator*		(Vector3 vec_);
 	Matrix3x3 operator*		(Matrix3x3 mat3x3_);
 	Matrix3x3				Transpose();
+	void					Scale(float scalar_);
 
 	std::string ToString();
 

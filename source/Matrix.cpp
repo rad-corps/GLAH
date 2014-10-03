@@ -106,6 +106,13 @@ void Matrix3x3::setPosition		(Vector3 pos_)
 	matrix[2][1] = pos_.y;
 }
 
+void Matrix3x3::Scale(float scalar_)
+{
+	matrix[0][0] *= scalar_;
+	matrix[1][1] *= scalar_;
+	matrix[2][2] *= scalar_;
+}
+
 Vector3 Matrix3x3::Direction()
 {
 	return Vector3 (matrix[0][0],matrix[0][1], 0);

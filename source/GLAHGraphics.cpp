@@ -32,6 +32,14 @@ GLAHGraphics::Instance()
 	return instance;
 }
 
+void			
+GLAHGraphics::ScaleSprite				( unsigned int spriteID_, float scalar_ )
+{
+	Matrix3x3 temp = spriteList[spriteID_].translation;
+	temp.Scale(scalar_);
+	spriteList[spriteID_].translation = temp;
+}
+
 
 //unsigned int	GLAH::CreateSprite	
 // a_pTextureName	: filename/path of the texture to load

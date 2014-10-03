@@ -15,6 +15,8 @@ Tank::Tank(void)
 		Vector3(TANK_SPRITE_W/2, TANK_SPRITE_H/2, 0)//rotation origin offset
 		);
 
+	gfx->ScaleSprite(tankSprite, 0.5f);
+
 	turretSprite = gfx->CreateSprite(
 		"resources/tank_turret.png",				//the PNG to load
 		TANK_SPRITE_W, TANK_SPRITE_H,				//width and height of sprite

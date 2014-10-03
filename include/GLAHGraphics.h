@@ -44,6 +44,8 @@ public:
 	void			RotateSpriteRelative			( unsigned int a_uiSpriteID, float a_fRotation );
 	void			RotateSprite					( unsigned int a_uiSpriteID, float a_fRotation );
 
+	void			ScaleSprite				( unsigned int spriteID_, float scalar_ );
+
 	unsigned int	DuplicateSprite			( unsigned int a_uiSpriteID );
 	void			DestroySprite			( unsigned int a_uiSpriteID );
 	void			SetSpriteColour			( unsigned int a_uiSpriteID, SColour& a_sColour );
