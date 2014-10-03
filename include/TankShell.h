@@ -5,7 +5,7 @@
 #include "Vector.h"
 
 
-class TankShell : public GLAHEntity
+class TankShell
 {
 public:
 	void Shoot(Vector3 pos_, float dir_);
@@ -23,5 +23,7 @@ private:
 	Vector3 position;
 	bool active;
 	float activeFor;
+
+	unsigned int spriteID;
 };
 

@@ -9,7 +9,7 @@
 
 
 
-class Tank : public GLAHEntity
+class Tank
 {
 public:
 	Tank();
@@ -34,6 +34,7 @@ private:
 	GLAHInput* inpt;
 
 	unsigned int turretSprite;
+	unsigned int tankSprite;
 
 	float timeSinceReload;
 };
