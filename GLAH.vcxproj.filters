@@ -107,5 +107,8 @@
     <ClInclude Include="include\TankShell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\bass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
