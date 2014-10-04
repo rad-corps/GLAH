@@ -33,7 +33,7 @@ GLAHGraphics::Instance()
 }
 
 void			
-GLAHGraphics::ScaleSprite				( unsigned int spriteID_, float scalar_ )
+GLAHGraphics::ScaleSprite( unsigned int spriteID_, float scalar_ )
 {
 	spriteList[spriteID_].scale = scalar_;
 }
@@ -49,15 +49,15 @@ GLAHGraphics::ScaleSprite				( unsigned int spriteID_, float scalar_ )
 // originOffset_	: the point of rotation, this is relative to the sprites own space. 
 //						Default value is Vector3
 // a_sColour		: not implemented
-unsigned int GLAHGraphics::CreateSprite	( const char* a_pTextureName, 
-									 int a_iWidth, int a_iHeight, 
+unsigned int GLAHGraphics::CreateSprite	( const char* textureName_, 
+									 int width_, int height_, 
 									 int x_, int y_, 
 									 unsigned int parentSpriteID_, 
 									 Vector3 originOffset_, 
-									 SColour a_sColour )
+									 SColour colour_ )
  {
 	//Create the texture and get the handle. 
-	GLuint texture_handle = SOIL_load_OGL_texture(a_pTextureName, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, NULL);
+	GLuint texture_handle = SOIL_load_OGL_texture(textureName_, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, NULL);
 
 	//Setup the translation matrix for the sprite
 	Matrix3x3 translation;
@@ -65,8 +65,8 @@ unsigned int GLAHGraphics::CreateSprite	( const char* a_pTextureName,
 
 	//add the sprite info to the spriteList (std::map<unsigned int, GLAHSprite>)
 	GLAHEntity glahEntity;
-	glahEntity.size.x = a_iWidth;
-	glahEntity.size.y = a_iHeight;
+	glahEntity.size.x = width_;
+	glahEntity.size.y = height_;
 	glahEntity.parentSpriteID = parentSpriteID_;
 	glahEntity.spriteID = texture_handle;
 	glahEntity.translation = translation;	
@@ -76,17 +76,6 @@ unsigned int GLAHGraphics::CreateSprite	( const char* a_pTextureName,
 	//return the sprites ID/Handle
 	return texture_handle;
  }
-
-GLAHEntity* GLAHGraphics::CreateEntity(const char* a_pTextureName, 
-										 int a_iWidth, int a_iHeight, 
-										 int x, int y, 
-										 unsigned int parentSpriteID, 
-										 Vector3 originOffset_, 
-										 SColour a_sColour )
-{
-	unsigned int spriteID = CreateSprite(a_pTextureName, a_iWidth, a_iHeight, x, y, parentSpriteID, originOffset_, a_sColour);
-	return &spriteList[spriteID];
-}
 
 //GLAH::DrawSprite ( unsigned int spriteID_)
 void GLAHGraphics::DrawSprite(unsigned int spriteID_)
@@ -147,31 +136,6 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 //x_			: the absolute (world space) x coordinate to draw 
 //y_			: the absolute (world space) y coordinate to draw 
 //rotation_		: rotation expressed as radians
-void GLAHGraphics::DrawSprite(unsigned int spriteID_, float x_, float y_, float rotation_)
-{
-	//translation/position matrix
-	Matrix3x3 translationMat;
-	translationMat.SetupTranslation(Vector3(x_, y_, 0.0));
-
-	//rotation matrix
-	Matrix3x3 rotationMat;
-	rotationMat.SetupRotation(rotation_);	
-
-	//transform
-	Matrix3x3 transform = rotationMat * translationMat;
-
-	//set the transform of the sprite
-	spriteList[spriteID_].translation = transform;
-
-	//Call DrawSprite
-	DrawSprite(spriteID_);
-}
-
-//GLAH::DrawSprite
-//spriteID_		: The ID of the sprite to draw
-//x_			: the absolute (world space) x coordinate to draw 
-//y_			: the absolute (world space) y coordinate to draw 
-//rotation_		: rotation expressed as radians
 void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
 {
 	//translation/position matrix
@@ -191,12 +155,6 @@ void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
 
 	//set the transform of the sprite
 	spriteList[spriteID_].translation = transform;
-}
-
-void GLAHGraphics::DrawEntity(GLAHEntity* entity_)
-{
-	//Call DrawSprite
-	DrawSprite(entity_->spriteID);
 }
 
 //GLAH::DrawSpriteRelative
@@ -232,14 +190,14 @@ void GLAHGraphics::MoveSpriteRelative(unsigned int spriteID_, float xMovement_, 
 	return;
 }
 
-void GLAHGraphics::RotateSpriteRelative(unsigned int a_uiSpriteID, float a_fRotation )
+void GLAHGraphics::RotateSpriteRelative(unsigned int spriteID_, float rotation_ )
 {
-	spriteList[a_uiSpriteID].rotation += a_fRotation;
+	spriteList[spriteID_].rotation += rotation_;
 }
 
-void GLAHGraphics::RotateSprite(unsigned int a_uiSpriteID, float a_fRotation )
+void GLAHGraphics::RotateSprite(unsigned int spriteID_, float rotation_ )
 {
-	spriteList[a_uiSpriteID].rotation = a_fRotation;
+	spriteList[spriteID_].rotation = rotation_;
 }
 
 

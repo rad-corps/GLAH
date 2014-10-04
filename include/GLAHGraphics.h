@@ -7,86 +7,66 @@
 
 using namespace std;
 
-
 class GLAHGraphics
 {
 public:
 	static GLAHGraphics* Instance();
 	~GLAHGraphics();
 
-	void			ClearScreen();
+	//create a sprite (returns a spriteID)
+	//This also creates a GLAHEntity that maps to the sprite ID
+	//See GLAHEntity for more info
+	unsigned int CreateSprite( const char* textureName_, //the filename/path of the sprite
+								int width_, int height_, //width and height in pixels
+								int x_, int y_,			 //starting positions
+								unsigned int parentSpriteID_ = 0, //sprite to parent to (0 if none)
+								Vector3 originOffset_ = Vector3(0.f,0.f,0.f), //rotation origin (bottom left by default)
+								SColour colour_ = SColour(0xFF,0xFF,0xFF,0xFF) ); //RGBA (white default)
 
-	unsigned int	CreateSprite			( const char* a_pTextureName, 
-										 int a_iWidth, int a_iHeight, 
-										 int x, int y, 
-										 unsigned int parentSpriteID = 0, 
-										 Vector3 originOffset_ = Vector3(0.f,0.f,0.f), 
-										 SColour a_sColour = SColour(0xFF,0xFF,0xFF,0xFF) );
-	GLAHEntity*		CreateEntity		( const char* a_pTextureName, 
-										 int a_iWidth, int a_iHeight, 
-										 int x, int y, 
-										 unsigned int parentSpriteID = 0, 
-										 Vector3 originOffset_ = Vector3(0.f,0.f,0.f), 
-										 SColour a_sColour = SColour(0xFF,0xFF,0xFF,0xFF) );
-
-	void			MoveSprite				( unsigned int a_uiSpriteID, float a_fXPos, float a_fYPos );
-	void			MoveSprite				( unsigned int a_uiSpriteID, float* a_vFloatVec );
-	void			MoveSpriteRelative		( unsigned int spriteID_, float xMovement_, float yMovement_, float rotation_);
-
-	void			DrawEntity				( GLAHEntity* entity_);
-	void			DrawSprite				( unsigned int a_uiSpriteID);
+	//Move the sprite in world space to the absolute coordinate xPos_, yPos_
+	void			MoveSprite				( unsigned int spriteID_, float xPos_, float yPos_ );
 	
-	//draw and move all in one
-	void			DrawSprite				( unsigned int a_uiSpriteID, float x_, float y_, float rotation_);
+	//move the sprite relative to its current position
+	void			MoveSpriteRelative		( unsigned int spriteID_, float xMovement_, float yMovement_ = 0.0f, float rotation_ = 0.0f);
+	
+	//rotate the sprite to this rotation_
+	void			RotateSprite					( unsigned int spriteID_, float rotation_ );
+	
+	//rotate the sprite relative to current rotation
+	void			RotateSpriteRelative			( unsigned int spriteID_, float rotation_ );
+	
+	//draw the sprite to screen
+	void			DrawSprite				( unsigned int spriteID_);
 
+	//Get information about the sprite based on spriteID_ 
 	GLAHEntity		GetGLAHEntity			(unsigned int spriteID_);
 
-	void			RotateSpriteRelative			( unsigned int a_uiSpriteID, float a_fRotation );
-	void			RotateSprite					( unsigned int a_uiSpriteID, float a_fRotation );
-
+	//Scale sprite (both x and y scaled by scalar_)
 	void			ScaleSprite				( unsigned int spriteID_, float scalar_ );
 
-	unsigned int	DuplicateSprite			( unsigned int a_uiSpriteID );
-	void			DestroySprite			( unsigned int a_uiSpriteID );
-	void			SetSpriteColour			( unsigned int a_uiSpriteID, SColour& a_sColour );
-	void			GetSpriteColour			( unsigned int a_uiSpriteID, SColour& a_sColour );
+	//NOT YET IMPLEMENTED
+	void			ClearScreen();
+	unsigned int	DuplicateSprite			( unsigned int spriteID_ );
+	void			DestroySprite			( unsigned int spriteID_ );
+	void			SetSpriteColour			( unsigned int spriteID_, SColour& colour_ );
+	void			GetSpriteColour			( unsigned int spriteID_, SColour& colour_ );
 
-	void			SetSpriteMatrix			( unsigned int a_uiSpriteID, float* a_fm4 );
-	void			GetSpriteMatrix			( unsigned int a_uiSpriteID, float* a_fm4 );
-
-	//////////////////////////////////////////////////////////////////////////
-
-// Basic Line Drawing Functionality
-
-//////////////////////////////////////////////////////////////////////////
-
- void			DrawLine( int a_iStartX, int a_iStartY, int a_iEndX, int a_iEndY );
-
- void			DrawLine( int a_iStartX, int a_iStartY, int a_iEndX, int a_iEndY, SColour a_sColour );
-
- void			DrawLine( int a_iStartX, int a_iStartY, int a_iEndX, int a_iEndY, SColour a_sStartColour, SColour a_sEndColour );
-
-
-
-//////////////////////////////////////////////////////////////////////////
-
-// Draws a String to the screen
-
-//////////////////////////////////////////////////////////////////////////
-
- void			DrawString( const char* a_pText, int a_iXPos, int a_iYPos, float fSize = 1.f, SColour a_sColour = SColour(0xFF,0xFF,0xFF,0xFF));
- void			AddFont( const char* a_pFontName );
- void			SetFont( const char* a_pFontName );
- void			RemoveFont( const char* a_pFontName );
+	void			DrawString( const char* text_, int xPos_, int yPos_, float size_ = 1.f, SColour colour_ = SColour(0xFF,0xFF,0xFF,0xFF));
+	void			AddFont( const char* fontName_ );
+	void			SetFont( const char* fontName_ );
+	void			RemoveFont( const char* fontName_ );
+	//END OF NOT YET IMPLEMENTED
 
 private:
+	
+	//used internally by DrawSprite
 	void CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br);
+	
+	//contains additional information about sprite rotation, scale, position etc.
 	std::map<unsigned int, GLAHEntity> spriteList;
 
-	//private constructor for singleton pattern... ewwww
+	//GLAHGraphics singleton
 	GLAHGraphics();
-	
-
 	static GLAHGraphics* instance;
 };
 

@@ -2,14 +2,11 @@
 
 #include "TankGame.h"
 #include <math.h>
-#include "GLAHGraphics.h"
 #include "CONSTS.h"
 
 TankGame::TankGame() : GLAH(SCREEN_WIDTH, SCREEN_HEIGHT, true, "GLAH Test Tanks")
 {
 	tank.AddObserver(this);
-	gfx = GLAHGraphics::Instance();
-	inpt = GLAHInput::Instance();	
 
 	for ( int i = 0; i < SHELLS_IN_MEMORY; ++i )
 	{
