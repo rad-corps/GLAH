@@ -14,6 +14,7 @@ TankShell::Shoot(Vector3 pos_, float dir_)
 {
 	gfx->RotateSprite(spriteID, dir_);
 	gfx->MoveSprite(spriteID, pos_.x, pos_.y);
+	gfx->MoveSpriteRelative(spriteID, -SHELL_OFFSET, 0.f, 0.f);
 	//gfx->RotateSprite(spriteID, PI);
 	velocity = Vector3(1.0f, 1.0f, 0.0f);
 	velocity.SetAngle(dir_);	
@@ -31,11 +32,13 @@ TankShell::TankShell(){
 	spriteID = gfx->CreateSprite(
 		"resources/TankShell1.png",					//the PNG to load
 		SHELL_W, SHELL_H,							//width and height of sprite
-		0, 0,								//initial x/y position (relative to parent)
+		0, 0,										//initial x/y position (relative to parent)
 		0,											//no parent
 		//Vector3(SHELL_W/2, SHELL_H/2, 0)//rotation origin offset
-		Vector3(250, SHELL_H/2, 0)//rotation origin offset
+		Vector3(SHELL_W/2, SHELL_H/2, 0)//rotation origin offset
 		);
+
+	gfx->ScaleSprite(spriteID, SHELL_SCALAR);
 	
 	active = false;
 }

@@ -27,12 +27,13 @@ struct Matrix3x3
 {
 	Matrix3x3();
 	Matrix3x3(float a_, float b_, float c_, float d_, float e_, float f_, float g_, float h_, float i_);
-	void setupRotation		(float rotation_);
-	void setupTranslation	(Vector3  vec_);
-	void setupIdentity		();
-	void setPosition		(Vector3 pos_);
-	Vector3	getPosition		();
-	void move				(Vector3 movement_);
+	void SetupRotation		(float rotation_);
+	void SetupTranslation	(Vector3  vec_);
+	void SetupIdentity		();
+	void SetupScale			(float scalar_);
+	void SetPosition		(Vector3 pos_);
+	Vector3	GetPosition		();
+	void Move				(Vector3 movement_);
 	Vector3	Direction		();
 	Vector3 operator*		(Vector3 vec_);
 	Matrix3x3 operator*		(Matrix3x3 mat3x3_);

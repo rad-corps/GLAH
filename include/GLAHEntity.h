@@ -10,6 +10,7 @@ struct GLAHEntity
 	Vector2 size; //x=width,y=height
 	Vector3 origin;
 	float rotation;
+	float scale;
 
-	GLAHEntity() : rotation(0.0f) {}
+	GLAHEntity() : rotation(0.0f), scale(1.0f) {}
 };

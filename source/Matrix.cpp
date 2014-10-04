@@ -100,30 +100,30 @@ string Matrix4x4::ToString()
 ///////////////////////////////////////////
 //Matrix3x3 class
 ///////////////////////////////////////////
-void Matrix3x3::setPosition		(Vector3 pos_)
-{
-	matrix[2][0] = pos_.x;
-	matrix[2][1] = pos_.y;
-}
+//void Matrix3x3::SetPosition		(Vector3 pos_)
+//{
+//	matrix[2][0] = pos_.x;
+//	matrix[2][1] = pos_.y;
+//}
 
-void Matrix3x3::Scale(float scalar_)
-{
-	matrix[0][0] *= scalar_;
-	matrix[1][1] *= scalar_;
-	matrix[2][2] *= scalar_;
-}
+//void Matrix3x3::Scale(float scalar_)
+//{
+//	matrix[0][0] *= scalar_;
+//	matrix[1][1] *= scalar_;
+//	matrix[2][2] *= scalar_;
+//}
 
 Vector3 Matrix3x3::Direction()
 {
 	return Vector3 (matrix[0][0],matrix[0][1], 0);
 }
 
-Vector3 Matrix3x3::getPosition()
+Vector3 Matrix3x3::GetPosition()
 {
 	return Vector3 (matrix[2][0], matrix[2][1], 1.0);
 }
 
-void Matrix3x3::move		(Vector3 movement_)
+void Matrix3x3::Move		(Vector3 movement_)
 {
 	matrix[2][0] += movement_.x;
 	matrix[2][1] += movement_.y;
@@ -142,7 +142,7 @@ Matrix3x3::Matrix3x3()
 	matrix[2][2] = 0.0;
 }
 
-void Matrix3x3::setupIdentity()
+void Matrix3x3::SetupIdentity()
 {
 	matrix[0][0] = 1.0f;
 	matrix[0][1] = 0.0f;
@@ -170,7 +170,7 @@ Matrix3x3::Matrix3x3(float a_, float b_, float c_, float d_, float e_, float f_,
 	matrix[2][2] = i_;
 }
 
-void Matrix3x3::setupRotation		(float rot_)
+void Matrix3x3::SetupRotation		(float rot_)
 {
 	matrix[0][0] = cos(rot_);
 	matrix[0][1] = -sin(rot_);
@@ -183,7 +183,7 @@ void Matrix3x3::setupRotation		(float rot_)
 	matrix[2][2] = 1.0;
 }
 
-void Matrix3x3::setupTranslation	(Vector3  vec_)
+void Matrix3x3::SetupTranslation	(Vector3  vec_)
 {
 	matrix[0][0] = 1.0;
 	matrix[0][1] = 0.0;
@@ -194,6 +194,21 @@ void Matrix3x3::setupTranslation	(Vector3  vec_)
 	matrix[2][0] = vec_.x;
 	matrix[2][1] = vec_.y;
 	matrix[2][2] = 1.0;
+}
+
+void Matrix3x3::SetupScale			(float scalar_)
+{
+	matrix[0][0] = scalar_;
+	matrix[0][1] = 0.0f;
+	matrix[0][2] = 0.0f;
+
+	matrix[1][0] = 0.0f;
+	matrix[1][1] = scalar_;
+	matrix[1][2] = 0.0f;
+
+	matrix[2][0] = 0.0f;
+	matrix[2][1] = 0.0f;
+	matrix[2][2] = 1.0f;
 }
 
 Vector3 Matrix3x3::operator*		(Vector3 vec_)
