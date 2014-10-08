@@ -20,7 +20,7 @@ const int SHELL_VELOCITY = 1500;
 const int SHELLS_IN_MEMORY = 10;
 const float MAX_BULLET_TIME = 3.0f;
 const float SHELL_SCALAR = 0.5f;
-const float SHELL_OFFSET = 140.f;
+const float SHELL_OFFSET = 290.f;
 
 //MATH
 const float PI = 3.14159265f;

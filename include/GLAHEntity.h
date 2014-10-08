@@ -5,7 +5,8 @@
 struct GLAHEntity
 {
 	unsigned int spriteID;
-	Matrix3x3 translation;
+	//Matrix3x3 translation;
+	Vector3 position;
 	unsigned int parentSpriteID; //if null, no parent. 
 	Vector2 size; //x=width,y=height
 	Vector3 origin;

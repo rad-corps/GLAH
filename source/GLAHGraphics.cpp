@@ -1,3 +1,7 @@
+//GLAHGraphics.cpp
+//Author: Adam Hulbert
+//
+
 #include "GLAHGraphics.h"
 #include <GL/glew.h>
 #include <GL/wglew.h>
@@ -11,17 +15,18 @@
 GLAHGraphics* GLAHGraphics::instance = nullptr;
 
 
+//private ctor
 GLAHGraphics::GLAHGraphics(void)
 {
 }
 
-
+//TODO - do we need to release all sprites? 
 GLAHGraphics::~GLAHGraphics(void)
 {
 }
 
 
-
+//Yes. I am a singleton. Deal with it :)
 GLAHGraphics*
 GLAHGraphics::Instance()
 {
@@ -32,23 +37,16 @@ GLAHGraphics::Instance()
 	return instance;
 }
 
-void			
-GLAHGraphics::ScaleSprite( unsigned int spriteID_, float scalar_ )
-{
-	spriteList[spriteID_].scale = scalar_;
-}
-
-
-//unsigned int	GLAH::CreateSprite	
-// a_pTextureName	: filename/path of the texture to load
-// a_iWidth			: width of texture
-// a_iHeight		: height of texture
-// int x_			: initial x position of texture
-// int y_			: initial y position of texture
+//unsigned int	GLAHGraphics::CreateSprite	
+// textureName_		: filename/path of the texture to load
+// width_			: width of texture
+// height_			: height of texture
+// x_				: initial x position of texture
+// y_				: initial y position of texture
 // parentSpriteID_	: sprite ID of sprite to parent to (0 if no parent)
 // originOffset_	: the point of rotation, this is relative to the sprites own space. 
 //						Default value is Vector3
-// a_sColour		: not implemented
+// colour_			: not implemented
 unsigned int GLAHGraphics::CreateSprite	( const char* textureName_, 
 									 int width_, int height_, 
 									 int x_, int y_, 
@@ -63,19 +61,45 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 	Matrix3x3 translation;
 	translation.SetupTranslation(Vector3(x_, y_, 0.0));
 
-	//add the sprite info to the spriteList (std::map<unsigned int, GLAHSprite>)
+	//Create an entity with position, scale, rotation info
 	GLAHEntity glahEntity;
 	glahEntity.size.x = width_;
 	glahEntity.size.y = height_;
 	glahEntity.parentSpriteID = parentSpriteID_;
 	glahEntity.spriteID = texture_handle;
-	glahEntity.translation = translation;	
+	glahEntity.position = Vector3(x_, y_, 1);
 	glahEntity.origin = originOffset_;
+
+	//add to the spriteList (map) using the texture_handle as the key
 	spriteList[texture_handle] = glahEntity;
 	
 	//return the sprites ID/Handle
 	return texture_handle;
  }
+
+//returns the transform matrix based on the sprite
+Matrix3x3		
+GLAHGraphics::SpriteMatrix( unsigned int spriteID_ )
+{
+	Matrix3x3 translationMat;
+	translationMat.SetupTranslation(spriteList[spriteID_].position);
+
+	Matrix3x3 rotationMat;
+	float rotation = spriteList[spriteID_].rotation;
+	rotationMat.SetupRotation(rotation);
+
+	Matrix3x3 scaleMatrix;
+	scaleMatrix.SetupScale(spriteList[spriteID_].scale);
+
+	return scaleMatrix * rotationMat * translationMat;
+}
+
+//modify the scale of the sprite
+void			
+GLAHGraphics::ScaleSprite( unsigned int spriteID_, float scalar_ )
+{
+	spriteList[spriteID_].scale = scalar_;
+}
 
 //GLAH::DrawSprite ( unsigned int spriteID_)
 void GLAHGraphics::DrawSprite(unsigned int spriteID_)
@@ -90,7 +114,8 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 	Matrix3x3 parentTrans;
 	if ( spriteList[spriteID_].parentSpriteID != 0 )
 	{
-		parentTrans = spriteList[entity.parentSpriteID].translation;
+//		parentTrans = spriteList[entity.parentSpriteID].translation;
+		parentTrans = SpriteMatrix(spriteList[spriteID_].parentSpriteID);
 	}
 	else //if no parent, use an identity matrix for simplicity
 	{
@@ -98,7 +123,8 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 	}
 	
 	//get the offset from parent and add it to the translatedPosition Vector3
-	Vector3 offset = entity.translation.GetPosition();
+	//Vector3 offset = entity.translation.GetPosition();
+	Vector3 offset = entity.position;
 	Vector3 translatedPosition = parentTrans * offset;
 	
 	//translation matrix
@@ -135,26 +161,9 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 //spriteID_		: The ID of the sprite to draw
 //x_			: the absolute (world space) x coordinate to draw 
 //y_			: the absolute (world space) y coordinate to draw 
-//rotation_		: rotation expressed as radians
 void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
 {
-	//translation/position matrix
-	Matrix3x3 translationMat;
-	translationMat.SetupTranslation(Vector3(x_, y_, 0.0));
-
-	//rotation matrix
-	Matrix3x3 rotationMat;
-	rotationMat.SetupRotation(spriteList[spriteID_].rotation);	
-
-	//scale matrix
-	Matrix3x3 scaleMatrix;
-	scaleMatrix.SetupScale(spriteList[spriteID_].scale);	
-
-	//transform
-	Matrix3x3 transform = scaleMatrix * rotationMat * translationMat;
-
-	//set the transform of the sprite
-	spriteList[spriteID_].translation = transform;
+	spriteList[spriteID_].position = Vector3(x_, y_, 1);
 }
 
 //GLAH::DrawSpriteRelative
@@ -163,31 +172,10 @@ void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
 //yMovement_	: The Relative y movement (current y position + yMovement_)
 //rotation_		: Amount to rotate sprite by expressed as radians (current rotation + rotation_)
 void GLAHGraphics::MoveSpriteRelative(unsigned int spriteID_, float xMovement_, float yMovement_, float rotation_)
-{		
-	//position
-	Vector3 pos = spriteList[spriteID_].translation.GetPosition();
-	
-	//modify rotation
+{			
+	Matrix3x3 spriteMat = SpriteMatrix(spriteID_);
+	spriteList[spriteID_].position = spriteMat * Vector3 (xMovement_, yMovement_, 1.f);
 	spriteList[spriteID_].rotation += rotation_;
-	
-	//create translation/position matrix
-	Matrix3x3 translationMat;
-	translationMat.SetupTranslation(Vector3(pos.x, pos.y, 0.0));
-
-	//create rotation matrix
-	Matrix3x3 rotationMat;
-	rotationMat.SetupRotation(spriteList[spriteID_].rotation);
-
-	//create transform matrix
-	Matrix3x3 transform = rotationMat * translationMat;
-	spriteList[spriteID_].translation = transform;
-
-	//add the x and y movement to the sprite
-	Vector3 movement(xMovement_, yMovement_, 0.0);	
-	movement = spriteList[spriteID_].translation * movement;
-	spriteList[spriteID_].translation.Move(movement);
-
-	return;
 }
 
 void GLAHGraphics::RotateSpriteRelative(unsigned int spriteID_, float rotation_ )
@@ -199,8 +187,6 @@ void GLAHGraphics::RotateSprite(unsigned int spriteID_, float rotation_ )
 {
 	spriteList[spriteID_].rotation = rotation_;
 }
-
-
 
 GLAHEntity GLAHGraphics::GetGLAHEntity(unsigned int spriteID_)
 {

@@ -44,13 +44,15 @@ public:
 	//Scale sprite (both x and y scaled by scalar_)
 	void			ScaleSprite				( unsigned int spriteID_, float scalar_ );
 
+	//Create the SpriteMatrix on the fly
+	Matrix3x3		SpriteMatrix			( unsigned int spriteID_ );
+
 	//NOT YET IMPLEMENTED
-	void			ClearScreen();
+	void			ClearScreen();	
 	unsigned int	DuplicateSprite			( unsigned int spriteID_ );
 	void			DestroySprite			( unsigned int spriteID_ );
 	void			SetSpriteColour			( unsigned int spriteID_, SColour& colour_ );
 	void			GetSpriteColour			( unsigned int spriteID_, SColour& colour_ );
-
 	void			DrawString( const char* text_, int xPos_, int yPos_, float size_ = 1.f, SColour colour_ = SColour(0xFF,0xFF,0xFF,0xFF));
 	void			AddFont( const char* fontName_ );
 	void			SetFont( const char* fontName_ );

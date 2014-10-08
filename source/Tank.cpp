@@ -23,8 +23,6 @@ Tank::Tank(void)
 		Vector3(150,64,0)							//rotation origin offset
 		); 
 
-	//gfx->RotateSprite(turretSprite, PI);
-
 	timeSinceReload = RELOAD_TIME;
 }
 
@@ -70,7 +68,7 @@ Tank::Update(float delta_)
 		//logic : can we shoot? ammo, reload time
 		if ( timeSinceReload > RELOAD_TIME )
 		{
-			observer->OnShoot(gfx->GetGLAHEntity(tankSprite).translation.GetPosition(), gfx->GetGLAHEntity(turretSprite).rotation + gfx->GetGLAHEntity(tankSprite).rotation);
+			observer->OnShoot(gfx->GetGLAHEntity(tankSprite).position, gfx->GetGLAHEntity(turretSprite).rotation + gfx->GetGLAHEntity(tankSprite).rotation);
 			timeSinceReload = 0.0f;
 		}
 	}
