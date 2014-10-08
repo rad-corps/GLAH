@@ -45,7 +45,7 @@ public:
 	void			ScaleSprite				( unsigned int spriteID_, float scalar_ );
 
 	//Create the SpriteMatrix on the fly
-	Matrix3x3		SpriteMatrix			( unsigned int spriteID_ );
+	Matrix3x3		CreateSpriteTransformation	( unsigned int spriteID_ );
 
 	//NOT YET IMPLEMENTED
 	void			ClearScreen();	

@@ -183,6 +183,38 @@ void Matrix3x3::SetupRotation		(float rot_)
 	matrix[2][2] = 1.0;
 }
 
+Matrix3x3 Matrix3x3::CreateRotationMatrix(float rot_)
+{
+	Matrix3x3 ret;
+	ret.matrix[0][0] = cos(rot_);
+	ret.matrix[0][1] = -sin(rot_);
+	ret.matrix[0][2] = 0.0;
+	ret.matrix[1][0] = sin(rot_);
+	ret.matrix[1][1] = cos(rot_);
+	ret.matrix[1][2] = 0.0;
+	ret.matrix[2][0] = 0.0;
+	ret.matrix[2][1] = 0.0;
+	ret.matrix[2][2] = 1.0;
+	return ret;
+}
+
+
+Matrix3x3 Matrix3x3::CreateTranslationMatrix (Vector3  vec_)
+{
+	Matrix3x3 ret;	
+	ret.matrix[0][0] = 1.0;
+	ret.matrix[0][1] = 0.0;
+	ret.matrix[0][2] = 0.0;
+	ret.matrix[1][0] = 0.0;
+	ret.matrix[1][1] = 1.0;
+	ret.matrix[1][2] = 0.0;
+	ret.matrix[2][0] = vec_.x;
+	ret.matrix[2][1] = vec_.y;
+	ret.matrix[2][2] = 1.0;
+	return ret;
+}
+
+
 void Matrix3x3::SetupTranslation	(Vector3  vec_)
 {
 	matrix[0][0] = 1.0;
@@ -209,6 +241,23 @@ void Matrix3x3::SetupScale			(float scalar_)
 	matrix[2][0] = 0.0f;
 	matrix[2][1] = 0.0f;
 	matrix[2][2] = 1.0f;
+}
+
+Matrix3x3 Matrix3x3::CreateScaleMatrix(float scalar_)
+{
+	Matrix3x3 ret;
+
+	ret.matrix[0][0] = scalar_;
+	ret.matrix[0][1] = 0.0f;
+	ret.matrix[0][2] = 0.0f;
+	ret.matrix[1][0] = 0.0f;
+	ret.matrix[1][1] = scalar_;
+	ret.matrix[1][2] = 0.0f;
+	ret.matrix[2][0] = 0.0f;
+	ret.matrix[2][1] = 0.0f;
+	ret.matrix[2][2] = 1.0f;
+
+	return ret;
 }
 
 Vector3 Matrix3x3::operator*		(Vector3 vec_)

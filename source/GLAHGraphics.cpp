@@ -79,18 +79,11 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 
 //returns the transform matrix based on the sprite
 Matrix3x3		
-GLAHGraphics::SpriteMatrix( unsigned int spriteID_ )
+GLAHGraphics::CreateSpriteTransformation( unsigned int spriteID_ )
 {
-	Matrix3x3 translationMat;
-	translationMat.SetupTranslation(spriteList[spriteID_].position);
-
-	Matrix3x3 rotationMat;
-	float rotation = spriteList[spriteID_].rotation;
-	rotationMat.SetupRotation(rotation);
-
-	Matrix3x3 scaleMatrix;
-	scaleMatrix.SetupScale(spriteList[spriteID_].scale);
-
+	Matrix3x3 translationMat = Matrix3x3::CreateTranslationMatrix(spriteList[spriteID_].position);
+	Matrix3x3 rotationMat = Matrix3x3::CreateRotationMatrix(spriteList[spriteID_].rotation);
+	Matrix3x3 scaleMatrix = Matrix3x3::CreateScaleMatrix(spriteList[spriteID_].scale);
 	return scaleMatrix * rotationMat * translationMat;
 }
 
@@ -115,7 +108,7 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 	if ( spriteList[spriteID_].parentSpriteID != 0 )
 	{
 //		parentTrans = spriteList[entity.parentSpriteID].translation;
-		parentTrans = SpriteMatrix(spriteList[spriteID_].parentSpriteID);
+		parentTrans = CreateSpriteTransformation(spriteList[spriteID_].parentSpriteID);
 	}
 	else //if no parent, use an identity matrix for simplicity
 	{
@@ -173,7 +166,7 @@ void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
 //rotation_		: Amount to rotate sprite by expressed as radians (current rotation + rotation_)
 void GLAHGraphics::MoveSpriteRelative(unsigned int spriteID_, float xMovement_, float yMovement_, float rotation_)
 {			
-	Matrix3x3 spriteMat = SpriteMatrix(spriteID_);
+	Matrix3x3 spriteMat = CreateSpriteTransformation(spriteID_);
 	spriteList[spriteID_].position = spriteMat * Vector3 (xMovement_, yMovement_, 1.f);
 	spriteList[spriteID_].rotation += rotation_;
 }
