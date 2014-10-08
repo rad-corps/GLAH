@@ -12,6 +12,7 @@ struct GLAHEntity
 	Vector3 origin;
 	float rotation;
 	float scale;
+	//float circleColliderRadius; //0 if no collider
 
-	GLAHEntity() : rotation(0.0f), scale(1.0f) {}
+	GLAHEntity() : rotation(0.0f), scale(1.0f) /*,circleColliderRadius(0.0f)*/ {}
 };

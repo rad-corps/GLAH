@@ -52,6 +52,7 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 									 int x_, int y_, 
 									 unsigned int parentSpriteID_, 
 									 Vector3 originOffset_, 
+									 float circleColliderRadius_,
 									 SColour colour_ )
  {
 	//Create the texture and get the handle. 
@@ -69,6 +70,7 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 	glahEntity.spriteID = texture_handle;
 	glahEntity.position = Vector3(x_, y_, 1);
 	glahEntity.origin = originOffset_;
+	//glahEntity.circleColliderRadius = circleColliderRadius_;
 
 	//add to the spriteList (map) using the texture_handle as the key
 	spriteList[texture_handle] = glahEntity;

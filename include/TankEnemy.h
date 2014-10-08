@@ -7,27 +7,20 @@
 #include "Vector.h"
 #include "TankObserver.h"
 
-
-
-class Tank
+class TankEnemy
 {
 public:
-	Tank();
-	~Tank(void);
-
-	void Accellerate();
-	void Reverse();
-
-	void Rotate(bool positive_);
-
-	void Update(float delta_);
-	void Draw();
+	TankEnemy(void);
+	~TankEnemy(void);
 
 	void AddObserver(TankObserver* observer_);
+	void Update(float delta_);
+	void Draw();
 
 	Vector3 Position();
 
 private:
+	
 	TankObserver* observer;
 	Vector2 velocity;
 	Vector2 direction;

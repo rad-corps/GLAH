@@ -9,6 +9,12 @@ TankShell::Active()
 	activeFor = 0.0f;
 }
 
+void 
+TankShell::Hit()
+{
+	active = false;
+}
+
 void
 TankShell::Shoot(Vector3 pos_, float dir_)
 {
@@ -19,7 +25,7 @@ TankShell::Shoot(Vector3 pos_, float dir_)
 	velocity = Vector3(1.0f, 1.0f, 0.0f);
 	velocity.SetAngle(dir_);	
 	velocity.Normalise();
-	position = pos_;
+	//position = pos_;
 	activeFor = 0.0f;
 
 	active = true;
@@ -70,4 +76,10 @@ TankShell::Update(float delta_)
 			velocity = Vector3(1,1,0);
 		}
 	}
+}
+
+Vector3
+TankShell::Position()
+{
+	return gfx->GetGLAHEntity(spriteID).position;
 }

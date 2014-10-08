@@ -21,7 +21,9 @@ public:
 								int x_, int y_,			 //starting positions
 								unsigned int parentSpriteID_ = 0, //sprite to parent to (0 if none)
 								Vector3 originOffset_ = Vector3(0.f,0.f,0.f), //rotation origin (bottom left by default)
-								SColour colour_ = SColour(0xFF,0xFF,0xFF,0xFF) ); //RGBA (white default)
+								float circleColliderRadius_ = 0.f,
+								SColour colour_ = SColour(0xFF,0xFF,0xFF,0xFF)); //RGBA (white default)
+								
 
 	//Move the sprite in world space to the absolute coordinate xPos_, yPos_
 	void			MoveSprite				( unsigned int spriteID_, float xPos_, float yPos_ );

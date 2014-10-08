@@ -12,15 +12,17 @@ public:
 	TankShell();
 	~TankShell(void);
 
+	void Hit();
 	void Update(float delta_);
 	void Draw();
 	bool Active();
 	void Reset();
+	Vector3 Position();
 
 private:
 	GLAHGraphics* gfx;
 	Vector3 velocity;
-	Vector3 position;
+	//Vector3 position;
 	bool active;
 	float activeFor;
 
