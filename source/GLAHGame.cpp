@@ -12,7 +12,6 @@ void GLAH::Run()
 {
 	while( FrameworkUpdate() )
 	{
-		//Update and Draw are part of GLAH's interface. i.e. the functions here are called on the class inheriting/implementing GLAH
 		Update(GetDeltaTime());
 		Draw();
 	}
@@ -24,6 +23,11 @@ GLAH::GLAH(int a_iWidth, int a_iHeight, bool a_bFullscreen, const char* a_pWindo
 	Initialise(a_iWidth, a_iHeight, a_bFullscreen, a_pWindowTitle);
 }
 
+void GLFWErroCallback(int errorCode_, const char *errStr_)
+{
+	cout << "GLFW error: " << errStr_ << endl;
+}
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief Call this function to initialise the framework 
 /// @param a_iWidth the width in pixels that we want the screen to display for the width of the window
@@ -33,6 +37,8 @@ GLAH::GLAH(int a_iWidth, int a_iHeight, bool a_bFullscreen, const char* a_pWindo
 //////////////////////////////////////////////////////////////////////////
 int	GLAH::Initialise( int a_iWidth, int a_iHeight, bool a_bFullscreen, const char* a_pWindowTitle)
 {
+	glfwSetErrorCallback(GLFWErroCallback);
+
 	//Initialise GLFW
     if(!glfwInit())
     {
@@ -70,9 +76,12 @@ int	GLAH::Initialise( int a_iWidth, int a_iHeight, bool a_bFullscreen, const cha
     //find the position of the matrix variable in the shader so we can send info there later
     GLuint MatrixIDFlat = glGetUniformLocation(uiProgramFlat, "MVP");
  
-    //set up the mapping of the screen to pixel co-ordinates.
+    //set up the mapping of the screen to pixel co-ordinates. Try changing these values to see what happens.	
     float* orthographicProjection = Matrix4x4::GetOrtho(0, a_iWidth, 0, a_iHeight, 0, 100);
+	//float* orthographicProjection2 = getOrtho(0, a_iWidth, 0, a_iHeight, 0, 100);
+	//orthographicProjection = getOrtho(-1, 1, -1, 1, 0, 100);
 
+	//GenerateVBO();
 
 	//create VBO/IBO	
     glGenBuffers(1, &VBO);                                                                                                                                  //generate VBO
@@ -137,6 +146,11 @@ bool GLAH::FrameworkUpdate()
  
 	return true;
 }
+
+
+
+
+
 
 //Calculate Delta time (time in miliseconds since last update)
 void GLAH::CalculateDelta()
