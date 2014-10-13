@@ -40,7 +40,8 @@
     <ClInclude Include="include\SOIL.h" />
     <ClInclude Include="include\TankGame.h" />
     <ClInclude Include="include\TankObserver.h" />
-    <ClInclude Include="include\Tests.h" />
+    <ClInclude Include="include\TestMatrix.h" />
+    <ClInclude Include="include\TestVectorAngle.h" />
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="include\Vertex.h" />
     <ClInclude Include="include\Tank.h" />

@@ -71,9 +71,6 @@
     <ClInclude Include="include\SOIL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Tests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -114,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TankEnemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TestMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TestVectorAngle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

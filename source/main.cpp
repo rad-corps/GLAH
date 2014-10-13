@@ -13,8 +13,14 @@
 
 //uncomment below to run tests
 //#define MATRIX_TESTS
+
 #ifdef MATRIX_TESTS
-#include "Tests.h"
+#include "TestMatrix.h"
+#endif
+
+#define VECTOR_ANGLE_TESTS
+#ifdef VECTOR_ANGLE_TESTS
+#include "TestVectorAngle.h"
 #endif
 
 using namespace std;
@@ -22,8 +28,13 @@ using namespace std;
 int main()
 {
 #ifdef MATRIX_TESTS
-	RunTests();
+	RunMatrixTests();
 	return 0; 
+#endif
+
+#ifdef VECTOR_ANGLE_TESTS
+	RunVectorAngleTests();
+	return 0;
 #endif
 
 	BASS_Init(-1,44100,0,0,0);

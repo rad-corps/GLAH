@@ -11,6 +11,7 @@
 using namespace std;
 
 
+//CTORS / DSTOR
 Vector2::Vector2()
 {
 	this->x = 1.f;
@@ -25,6 +26,7 @@ Vector2::Vector2(float x, float y)
 
 Vector2::~Vector2(){}
 
+//Magnitude Functions
 void Vector2::SetMagnitude(float length)
 {
 	float angle = this->GetAngle();
@@ -37,20 +39,21 @@ const float Vector2::GetMagnitude()
 	return sqrt(this->x * this->x + this->y * this->y);
 }
 
-//Radians (between -pi and pi)
-void Vector2::SetAngle(float angle)
+//Angle Functions
+void Vector2::SetAngle(float angle)//angle in Radians (between -pi and pi)
 {
 	float length = this->GetMagnitude();
 	this->x = cos(angle) * length;
 	this->y = sin(angle) * length;
 }
 
+//returns radians (between -pi and pi)
 float Vector2::GetAngle()
 {
 	return atan2(this->y, this->x);
 }
 
-//overloaded operators
+//overloaded arithmetic operators
 Vector2& Vector2::operator+=(const Vector2& vec)
 {
 	this->x += vec.x;
@@ -82,6 +85,71 @@ Vector2& Vector2::operator/=(const Vector2& vec)
 	this->y /= vec.y;
 	return *this;
 }
+
+Vector2 Vector2::operator+(Vector2 vec)
+{
+	Vector2 temp;
+	temp.x = this->x + vec.x;
+	temp.y = this->y + vec.y;
+	return temp;
+}
+
+Vector2 Vector2::operator-(Vector2 vec)
+{
+	Vector2 temp;
+	temp.x = this->x - vec.x;
+	temp.y = this->y - vec.y;
+	return temp;
+}
+
+Vector2 Vector2::operator*(Vector2 vec)
+{
+	Vector2 temp;
+	temp.x = this->x * vec.x;
+	temp.y = this->y * vec.y;
+	return temp;
+}
+
+Vector2 Vector2::operator/(Vector2 vec)
+{
+	Vector2 temp;
+	temp.x = this->x / vec.x;
+	temp.y = this->y / vec.y;
+	return temp;
+}
+
+Vector2 Vector2::operator*(float vec)
+{
+	Vector2 temp;
+	temp.x = this->x * vec;
+	temp.y = this->y * vec;
+	return temp;
+}
+
+//assignment
+void Vector2::operator=(Vector2 vec)
+{
+	this->x = vec.x;
+	this->y = vec.y;
+}
+
+//normalisation
+void Vector2::Normalise()
+{
+	float mag = this->GetMagnitude();
+	x /= mag;
+	y /= mag;	
+}
+
+Vector2 
+Vector2::GetNormal()
+{
+	Vector2 normal(x, y);
+	normal.Normalise();
+	return normal;
+}
+
+//comparison
 bool Vector2::operator!=(const Vector2& vec)
 {
 	if ( this->x == vec.x )
@@ -98,55 +166,12 @@ bool Vector2::operator==(const Vector2& vec)
 	return false;
 }
 
-void Vector2::operator=(Vector2 vec)
-{
-	this->x = vec.x;
-	this->y = vec.y;
-}
-
-Vector2 Vector2::operator-(Vector2 vec)
-{
-	Vector2 temp;
-	temp.x = this->x - vec.x;
-	temp.y = this->y - vec.y;
-	return temp;
-}
-
-void Vector2::Normalise()
-{
-	float mag = this->GetMagnitude();
-	x /= mag;
-	y /= mag;	
-}
-
-Vector2 
-Vector2::GetNormal()
-{
-	Vector2 normal(x, y);
-	normal.Normalise();
-	return normal;
-}
-
-Vector2 Vector2::operator*(float vec)
-{
-	Vector2 temp;
-	temp.x = this->x * vec;
-	temp.y = this->y * vec;
-	return temp;
-}
-
-Vector2 Vector2::operator*(Vector2 vec)
-{
-	vec.x = this->x * vec.x;
-	vec.y = this->y * vec.y;
-	return vec;
-}
-
 bool Vector2::operator>(float vec)
 {
 	return this->GetMagnitude() > vec;
 }
 
+//rotation helper
 Vector2 Vector2::Rotate90(bool clockwise)
 {
 	Vector2 ret;
@@ -157,19 +182,29 @@ Vector2 Vector2::Rotate90(bool clockwise)
 	return ret;
 }
 
+//ostream operator
 std::ostream& operator<<(std::ostream& os, Vector2 obj)
 {
-	os << "X: " << obj.x << ", Y: " << obj.x; 
+	os << "X: " << obj.x << ", Y: " << obj.y; 
 	return os;
 }
 
-Vector2 Vector2::Lerp(Vector2 origin, Vector2 velocity, float scalar)	//scalar between 0 - 1
+//dot product
+float Vector2::Dot(Vector2 vec_)
 {
-	velocity = velocity * scalar;
-	origin += velocity;
-	return origin;
+	return this->x * vec_.x + this->y * vec_.y;
 }
 
+float Vector2::AngleBetweenVectors(Vector2 vec_)
+{
+	Vector2 vec1 = this->GetNormal();
+	Vector2 vec1_perp = vec1.Rotate90(true);	
+	Vector2 vec2 = vec_.GetNormal();
+	if ( vec1_perp.Dot(vec2) >= 0 )
+		return acos(vec1.Dot(vec2));
+	else
+		return -acos(vec1.Dot(vec2));
+}
 
 Vector3::Vector3() : x(0.0), y(0.0), z(0.0){}
 Vector3::Vector3(float x_, float y_, float z_): x(x_), y(y_), z(z_){}

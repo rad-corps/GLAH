@@ -159,7 +159,7 @@ int TestMatrix3()
 	return 0;
 }
 
-void RunTests()
+void RunMatrixTests()
 {
 	TestMatrix();
 	TestMatrix2();

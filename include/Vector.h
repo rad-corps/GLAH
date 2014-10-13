@@ -74,9 +74,6 @@ public:
 	//Magnitude
 	void SetMagnitude(float length);
 	const float GetMagnitude();
-	
-	//Linear Interpolation
-	static Vector2 Lerp(Vector2 origin, Vector2 velocity, float scalar);	//scalar between 0 - 1
 
 	//Rotation helper
 	Vector2 Rotate90(bool clockwise);
@@ -85,18 +82,28 @@ public:
 	void Normalise();
 	Vector2 GetNormal();
 	
-	//overloaded operators
+	//overloaded arithmetic operators
 	Vector2& operator+=(const Vector2& vec);
 	Vector2& operator-=(const Vector2& vec);
 	Vector2& operator*=(const Vector2& vec);
 	Vector2& operator/=(const Vector2& vec);
-	void operator=(Vector2 vec); //ok
+	Vector2 operator+(Vector2 vec);
 	Vector2 operator-(Vector2 vec);
 	Vector2 operator*(Vector2 vec);
+	Vector2 operator/(Vector2 vec);
 
+	//dot product
+	float Dot(Vector2 vec_);
+
+	//work out the angle between the two vectors
+	float AngleBetweenVectors(Vector2 vec_);
+	
 	//scalar multiplication
 	Vector2& operator*=(const float& vec);
 	Vector2 operator*(float vec);
+	
+	//overloaded assignment operator
+	void operator=(Vector2 vec); 
 	
 	//comparison
 	bool operator > (float vec);
