@@ -150,6 +150,7 @@ public:
 
 	//dot product
 	float Dot(Vector3 vec_);
+	Vector3 Cross(Vector3 vec_);
 
 	//return the angle between the two vectors (in radians)
 	float AngleBetweenVectors(Vector3 vec_);
@@ -198,6 +199,9 @@ public:
 
 	//dot product
 	float Dot(Vector4 vec_);
+
+	//cross product (assume 3 Dimensional use)
+	Vector3 Cross(Vector4 vec_);
 
 	//return the angle between the two vectors (in radians)
 	float AngleBetweenVectors(Vector4 vec_);

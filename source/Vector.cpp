@@ -385,6 +385,15 @@ float Vector3::Dot(Vector3 vec_)
 	return this->x * vec_.x + this->y * vec_.y + this->z * vec_.z;
 }
 
+Vector3 Vector3::Cross(Vector3 vec_)
+{
+	Vector3 ret;
+	ret.x = y * vec_.z - z * vec_.y;
+	ret.y = z * vec_.x - x * vec_.z;
+	ret.z = x * vec_.y - y * vec_.x;
+	return ret;
+}
+
 //VECTOR4//////////////////////////
 ////////////////////////////////////
 
@@ -568,4 +577,13 @@ std::ostream& operator<<(std::ostream& os, Vector4 obj)
 float Vector4::Dot(Vector4 vec_)
 {
 	return this->x * vec_.x + this->y * vec_.y + this->z * vec_.z + this->w * vec_.w;
+}
+
+Vector3 Vector4::Cross(Vector4 vec_)
+{
+	Vector3 ret;
+	ret.x = y * vec_.z - z * vec_.y;
+	ret.y = z * vec_.x - x * vec_.z;
+	ret.z = x * vec_.y - y * vec_.x;
+	return ret;
 }

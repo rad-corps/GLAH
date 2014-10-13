@@ -35,6 +35,7 @@
     <ClInclude Include="include\FileIO.h" />
     <ClInclude Include="include\GLAHEntity.h" />
     <ClInclude Include="include\GLAHGame.h" />
+    <ClInclude Include="include\GLAHSoundInfo.h" />
     <ClInclude Include="include\Matrix.h" />
     <ClInclude Include="include\Shaders.h" />
     <ClInclude Include="include\SOIL.h" />
