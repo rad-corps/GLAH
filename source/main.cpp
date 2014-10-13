@@ -29,12 +29,10 @@ int main()
 {
 #ifdef MATRIX_TESTS
 	RunMatrixTests();
-	return 0; 
 #endif
 
 #ifdef VECTOR_ANGLE_TESTS
 	RunVectorAngleTests();
-	return 0;
 #endif
 
 	BASS_Init(-1,44100,0,0,0);

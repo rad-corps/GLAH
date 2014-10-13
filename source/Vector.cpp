@@ -11,6 +11,8 @@
 using namespace std;
 
 
+//VECTOR2//////////////////////////
+///////////////////////////////////
 //CTORS / DSTOR
 Vector2::Vector2()
 {
@@ -195,6 +197,7 @@ float Vector2::Dot(Vector2 vec_)
 	return this->x * vec_.x + this->y * vec_.y;
 }
 
+//return the angle between 2 vectors expressed as radians (-PI to PI)
 float Vector2::AngleBetweenVectors(Vector2 vec_)
 {
 	Vector2 vec1 = this->GetNormal();
@@ -206,26 +209,122 @@ float Vector2::AngleBetweenVectors(Vector2 vec_)
 		return -acos(vec1.Dot(vec2));
 }
 
-Vector3::Vector3() : x(0.0), y(0.0), z(0.0){}
-Vector3::Vector3(float x_, float y_, float z_): x(x_), y(y_), z(z_){}
-
-float Vector3::GetAngle()
+//VECTOR3///////////////////////////////////////
+/////////////////////////////////////////////////
+//CTORS / DSTOR
+Vector3::Vector3()
 {
-	return atan2(this->y, this->x);
+	this->x = 1.f;
+	this->y = 0.f;
+	this->z = 0.f;
 }
 
-void Vector3::SetAngle(float angle)
+Vector3::Vector3(float x, float y, float z)
 {
-	float length = this->GetMagnitude();
-	this->x = cos(angle) * length;
-	this->y = sin(angle) * length;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
+
+Vector3::~Vector3(){}
 
 const float Vector3::GetMagnitude()
 {
 	return sqrt(x * x + y * y + z * z);
 }
 
+//overloaded arithmetic operators
+Vector3& Vector3::operator+=(const Vector3& vec)
+{
+	this->x += vec.x;
+	this->y += vec.y;
+	this->z += vec.z;
+	return *this;
+}
+Vector3& Vector3::operator-=(const Vector3& vec)
+{
+	this->x -= vec.x;
+	this->y -= vec.y;
+	this->z -= vec.z;
+	return *this;
+}
+Vector3& Vector3::operator*=(const Vector3& vec)
+{
+	this->x *= vec.x;
+	this->y *= vec.y;
+	this->z *= vec.z;
+	return *this;
+}
+
+Vector3& Vector3::operator*=(const float& vec)
+{
+	this->x *= vec;
+	this->y *= vec;
+	this->z *= vec;
+	return *this;
+}
+Vector3& Vector3::operator/=(const Vector3& vec)
+{
+	this->x /= vec.x;
+	this->y /= vec.y;
+	this->z /= vec.z;
+	return *this;
+}
+
+Vector3 Vector3::operator+(Vector3 vec)
+{
+	Vector3 temp;
+	temp.x = this->x + vec.x;
+	temp.y = this->y + vec.y;
+	temp.z = this->z + vec.z;
+	return temp;
+}
+
+Vector3 Vector3::operator-(Vector3 vec)
+{
+	Vector3 temp;
+	temp.x = this->x - vec.x;
+	temp.y = this->y - vec.y;
+	temp.z = this->z - vec.z;
+	return temp;
+}
+
+Vector3 Vector3::operator*(Vector3 vec)
+{
+	Vector3 temp;
+	temp.x = this->x * vec.x;
+	temp.y = this->y * vec.y;
+	temp.z = this->z * vec.z;
+	return temp;
+}
+
+Vector3 Vector3::operator/(Vector3 vec)
+{
+	Vector3 temp;
+	temp.x = this->x / vec.x;
+	temp.y = this->y / vec.y;
+	temp.z = this->z / vec.z;
+	return temp;
+}
+
+Vector3 Vector3::operator*(float vec)
+{
+	Vector3 temp;
+	temp.x = this->x * vec;
+	temp.y = this->y * vec;
+	temp.z = this->z * vec;
+	return temp;
+}
+
+//assignment
+void Vector3::operator=(Vector3 vec)
+{
+	this->x = vec.x;
+	this->y = vec.y;
+	this->z = vec.z;
+}
+
+//normalisation
 void Vector3::Normalise()
 {
 	float mag = this->GetMagnitude();
@@ -234,45 +333,239 @@ void Vector3::Normalise()
 	z /= mag;	
 }
 
-
-
-Vector3 Vector3::operator*(float scalar_)
+Vector3 
+Vector3::GetNormal()
 {
-	Vector3 ret; 
-	ret.x = this->x * scalar_;
-	ret.y = this->y * scalar_;
-	ret.z = this->z * scalar_;
-	return ret;
+	Vector3 normal(x, y, z);
+	normal.Normalise();
+	return normal;
 }
 
-void Vector3::operator+=(Vector3 vec_)
+//comparison
+bool Vector3::operator!=(const Vector3& vec)
 {
-	this->x += vec_.x;
-	this->y += vec_.y;
-	this->z += vec_.z;
+	if ( this->x == vec.x )
+		if (this->y == vec.y )
+			if (this->z == vec.z )
+				return false;
+	return true;
 }
 
-Vector3 Vector3::operator-(Vector3 vec_)
+bool Vector3::operator==(const Vector3& vec)
 {
-	Vector3 temp;
-	temp.x = this->x - vec_.x;
-	temp.y = this->y - vec_.y;
-	temp.z = this->z - vec_.z;
+	if ( this->x == vec.x )
+		if (this->y == vec.y )
+			if (this->y == vec.y )
+				return true;
+	return false;
+}
+
+bool Vector3::operator>(float vec)
+{
+	return this->GetMagnitude() > vec;
+}
+
+//ostream operator
+std::ostream& operator<<(std::ostream& os, Vector3 obj)
+{
+	os << "X: " << obj.x << ", Y: " << obj.y << ", Z: " << obj.z; 
+	return os;
+}
+
+void Vector3::SetAngle(float angle)//angle in Radians (between -pi and pi)
+{
+	float length = this->GetMagnitude();
+	this->x = cos(angle) * length;
+	this->y = sin(angle) * length;
+}
+
+//dot product
+float Vector3::Dot(Vector3 vec_)
+{
+	return this->x * vec_.x + this->y * vec_.y + this->z * vec_.z;
+}
+
+//VECTOR4//////////////////////////
+////////////////////////////////////
+
+Vector4::Vector4()
+{
+	this->x = 1.f;
+	this->y = 1.f;
+	this->z = 1.f;
+	this->w = 1.f;
+}
+
+Vector4::Vector4(float x, float y, float z, float w)
+{
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->w = w;
+}
+
+Vector4::~Vector4(){}
+
+const float Vector4::GetMagnitude()
+{
+	return sqrt(x * x + y * y + z * z + w * w);
+}
+
+//overloaded arithmetic operators
+Vector4& Vector4::operator+=(const Vector4& vec)
+{
+	this->x += vec.x;
+	this->y += vec.y;
+	this->z += vec.z;
+	this->w += vec.w;
+	return *this;
+}
+Vector4& Vector4::operator-=(const Vector4& vec)
+{
+	this->x -= vec.x;
+	this->y -= vec.y;
+	this->z -= vec.z;
+	this->w -= vec.w;
+	return *this;
+}
+Vector4& Vector4::operator*=(const Vector4& vec)
+{
+	this->x *= vec.x;
+	this->y *= vec.y;
+	this->z *= vec.z;
+	this->w *= vec.w;
+	return *this;
+}
+
+Vector4& Vector4::operator*=(const float& vec)
+{
+	this->x *= vec;
+	this->y *= vec;
+	this->z *= vec;
+	this->w *= vec;
+	return *this;
+}
+Vector4& Vector4::operator/=(const Vector4& vec)
+{
+	this->x /= vec.x;
+	this->y /= vec.y;
+	this->z /= vec.z;
+	this->w /= vec.w;
+	return *this;
+}
+
+Vector4 Vector4::operator+(Vector4 vec)
+{
+	Vector4 temp;
+	temp.x = this->x + vec.x;
+	temp.y = this->y + vec.y;
+	temp.z = this->z + vec.z;
+	temp.z = this->w + vec.w;
 	return temp;
 }
 
-float Vector3::magnitude()
+Vector4 Vector4::operator-(Vector4 vec)
 {
-	return sqrt(x*x + y*y + z*z);
+	Vector4 temp;
+	temp.x = this->x - vec.x;
+	temp.y = this->y - vec.y;
+	temp.z = this->z - vec.z;
+	temp.w = this->w - vec.w;
+	return temp;
 }
 
-string Vector3::ToString()
+Vector4 Vector4::operator*(Vector4 vec)
 {
-	string ret = "";
+	Vector4 temp;
+	temp.x = this->x * vec.x;
+	temp.y = this->y * vec.y;
+	temp.z = this->z * vec.z;
+	temp.w = this->z * vec.w;
+	return temp;
+}
 
-	ret += "x: " + to_string(x) + 
-		"\ty: " + to_string(y) +
-		"\tz: " + to_string(z);
+Vector4 Vector4::operator/(Vector4 vec)
+{
+	Vector4 temp;
+	temp.x = this->x / vec.x;
+	temp.y = this->y / vec.y;
+	temp.z = this->z / vec.z;
+	temp.w = this->z / vec.w;
+	return temp;
+}
 
-	return ret;
+Vector4 Vector4::operator*(float vec)
+{
+	Vector4 temp;
+	temp.x = this->x * vec;
+	temp.y = this->y * vec;
+	temp.z = this->z * vec;
+	temp.w = this->w * vec;
+	return temp;
+}
+
+//assignment
+void Vector4::operator=(Vector4 vec)
+{
+	this->x = vec.x;
+	this->y = vec.y;
+	this->z = vec.z;
+	this->w = vec.w;
+}
+
+//normalisation
+void Vector4::Normalise()
+{
+	float mag = this->GetMagnitude();
+	x /= mag;
+	y /= mag;	
+	z /= mag;	
+	w /= mag;	
+}
+
+Vector4 
+Vector4::GetNormal()
+{
+	Vector4 normal(x, y, z, w);
+	normal.Normalise();
+	return normal;
+}
+
+//comparison
+bool Vector4::operator!=(const Vector4& vec)
+{
+	if ( this->x == vec.x )
+		if (this->y == vec.y )
+			if (this->z == vec.z )
+				if (this->w == vec.w )
+					return false;
+	return true;
+}
+
+bool Vector4::operator==(const Vector4& vec)
+{
+	if ( this->x == vec.x )
+		if (this->y == vec.y )
+			if (this->y == vec.y )
+				if (this->w == vec.w )
+					return true;
+	return false;
+}
+
+bool Vector4::operator>(float vec)
+{
+	return this->GetMagnitude() > vec;
+}
+
+//ostream operator
+std::ostream& operator<<(std::ostream& os, Vector4 obj)
+{
+	os << "X: " << obj.x << ", Y: " << obj.y << ", Z: " << obj.z << ", W: " << obj.w; 
+	return os;
+}
+
+//dot product
+float Vector4::Dot(Vector4 vec_)
+{
+	return this->x * vec_.x + this->y * vec_.y + this->z * vec_.z + this->w * vec_.w;
 }
