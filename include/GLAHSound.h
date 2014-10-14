@@ -12,25 +12,25 @@ public:
 	static GLAHSound* Instance();
 
 	
-	DWORD CreateSound(std::string path_, 
+	unsigned int CreateSound(std::string path_, 
 						bool loop_ = false, //true to loop
 						bool play_ = false, //true to start playing immediately
 						float vol_ = 0.2f, //0 to 1
 						float pan = 0.0f //-1 (full left) to +1 (full right)
 						);
 
-	void Play(DWORD sound_);
-	void Stop(DWORD sound_);
-	void Pause(DWORD sound_);
+	void Play(unsigned int sound_);
+	void Stop(unsigned int sound_);
+	void Pause(unsigned int sound_);
 
 	//set frequency sample rate in HZ
-	void SetPitch(DWORD sound_, float freq_ = 44100.f);
+	void SetPitch(unsigned int sound_, float freq_ = 44100.f);
 
 	//vol_ 0 min, 1 max
-	void SetVolume(DWORD sound_, float vol_ = 0.2f);
+	void SetVolume(unsigned int sound_, float vol_ = 0.2f);
 	
 	//pan -1 LEFT, +1 RIGHT
-	void SetPan(DWORD sound_, float pan_ = 0.0f);
+	void SetPan(unsigned int sound_, float pan_ = 0.0f);
 
 private:
 	GLAHSound(void);

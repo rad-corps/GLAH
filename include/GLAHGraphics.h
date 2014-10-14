@@ -46,8 +46,7 @@ public:
 	//Scale sprite (both x and y scaled by scalar_)
 	void			ScaleSprite				( unsigned int spriteID_, float scalar_ );
 
-	//Create the SpriteMatrix on the fly
-	Matrix3x3		CreateSpriteTransformation	( unsigned int spriteID_ );
+
 
 	//NOT YET IMPLEMENTED
 	void			ClearScreen();	
@@ -65,6 +64,9 @@ private:
 	
 	//used internally by DrawSprite
 	void CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br);
+	
+	//Create the SpriteMatrix on the fly
+	Matrix3x3		CreateSpriteTransformation	( unsigned int spriteID_ );
 	
 	//contains additional information about sprite rotation, scale, position etc.
 	std::map<unsigned int, GLAHEntity> spriteList;

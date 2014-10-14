@@ -12,7 +12,7 @@ void GLAH::Run()
 {
 	while( FrameworkUpdate() )
 	{
-		Update(GetDeltaTime());
+		Update((float)GetDeltaTime());
 		Draw();
 	}
 	Shutdown();
@@ -77,7 +77,7 @@ int	GLAH::Initialise( int a_iWidth, int a_iHeight, bool a_bFullscreen, const cha
     GLuint MatrixIDFlat = glGetUniformLocation(uiProgramFlat, "MVP");
  
     //set up the mapping of the screen to pixel co-ordinates. Try changing these values to see what happens.	
-    float* orthographicProjection = Matrix4x4::GetOrtho(0, a_iWidth, 0, a_iHeight, 0, 100);
+    float* orthographicProjection = Matrix4x4::GetOrtho(0.f, (float)a_iWidth, 0.f, (float)a_iHeight, 0.f, 100.f);
 	//float* orthographicProjection2 = getOrtho(0, a_iWidth, 0, a_iHeight, 0, 100);
 	//orthographicProjection = getOrtho(-1, 1, -1, 1, 0, 100);
 

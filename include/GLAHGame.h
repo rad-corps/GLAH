@@ -225,7 +225,7 @@ protected:
 	
 	GLAH(int a_iWidth, int a_iHeight, bool a_bFullscreen = false, const char* a_pWindowTitle = nullptr);
 
-	int				Initialise( int a_iWidth, int a_iHeight, bool a_bFullscreen = false, const char* a_pWindowTitle = nullptr );
+	
 	
 	virtual void Update(float delta) = 0;
 	virtual void Draw() = 0;
@@ -238,8 +238,7 @@ protected:
 /// @param a_pWIndowTitle the title that we want to be displayed in the windows title bar
 //////////////////////////////////////////////////////////////////////////
 
-void			Shutdown();
-bool			FrameworkUpdate();
+
 
 void			SetBackgroundColour( SColour a_BGColour );
 
@@ -276,19 +275,19 @@ void			SetBackgroundColour( SColour a_BGColour );
 
 
 
-//////////////////////////////////////////////////////////////////////////
-
-// Basic Camera Control
-
-//////////////////////////////////////////////////////////////////////////
-
-void			MoveCamera	( CameraDirection a_eCameraDirection, float a_fCameraSpeed );
-
-void			MoveCamera  ( float a_fXPos, float a_fYPos );
-
-void			RotateCamera( float a_fRotation );
-
-void			GetCameraPosition( float& a_fx, float& a_fy );
+////////////////////////////////////////////////////////////////////////////
+//
+//// Basic Camera Control
+//
+////////////////////////////////////////////////////////////////////////////
+//
+//void			MoveCamera	( CameraDirection a_eCameraDirection, float a_fCameraSpeed );
+//
+//void			MoveCamera  ( float a_fXPos, float a_fYPos );
+//
+//void			RotateCamera( float a_fRotation );
+//
+//void			GetCameraPosition( float& a_fx, float& a_fy );
 
 double 	GetDeltaTime();
 double FPS();
@@ -299,7 +298,10 @@ private:
 	//returns an array to four vertex positions (bottom left, top left, top right, bottom right)
 	
 	void CalculateDelta();
-	
+	int	Initialise( int a_iWidth, int a_iHeight, bool a_bFullscreen = false, const char* a_pWindowTitle = nullptr );
+	void Shutdown();
+	bool FrameworkUpdate();
+
 	GLFWwindow* window;
 	GLuint VBO;
 	GLuint IBO;

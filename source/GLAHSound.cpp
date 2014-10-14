@@ -23,7 +23,7 @@ GLAHSound::~GLAHSound(void)
 {
 }
 
-DWORD GLAHSound::CreateSound(std::string path_, bool loop_, bool play_, float vol_, float pan_ )
+unsigned int GLAHSound::CreateSound(std::string path_, bool loop_, bool play_, float vol_, float pan_ )
 {
 
 	DWORD sound;
@@ -41,32 +41,32 @@ DWORD GLAHSound::CreateSound(std::string path_, bool loop_, bool play_, float vo
 	return sound;
 }
 
-void GLAHSound::Play(DWORD sound_)
+void GLAHSound::Play(unsigned int sound_)
 {
 	BASS_ChannelPlay(sound_,true);
 }
 
-void GLAHSound::Stop(DWORD sound_)
+void GLAHSound::Stop(unsigned int sound_)
 {
 	BASS_ChannelStop(sound_);
 }
 
-void GLAHSound::Pause(DWORD sound_)
+void GLAHSound::Pause(unsigned int sound_)
 {
 	BASS_ChannelPause(sound_);
 }
 
-void GLAHSound::SetPitch(DWORD sound_, float freq_)
+void GLAHSound::SetPitch(unsigned int sound_, float freq_)
 {
 	BASS_ChannelSetAttribute(sound_, BASS_ATTRIB_FREQ, freq_);
 }
 
-void GLAHSound::SetVolume(DWORD sound_, float vol_)
+void GLAHSound::SetVolume(unsigned int sound_, float vol_)
 {
 	BASS_ChannelSetAttribute(sound_, BASS_ATTRIB_VOL, vol_);
 }
 
-void GLAHSound::SetPan(DWORD sound_, float pan_)
+void GLAHSound::SetPan(unsigned int sound_, float pan_)
 {
 	BASS_ChannelSetAttribute(sound_, BASS_ATTRIB_PAN, pan_);
 }

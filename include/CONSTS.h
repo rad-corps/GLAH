@@ -27,3 +27,5 @@ const float SHELL_RADIUS = (float)1.f;
 
 //MATH
 const float PI = 3.14159265f;
+
+typedef unsigned int uint;

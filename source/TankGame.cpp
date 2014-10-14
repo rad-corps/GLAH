@@ -32,7 +32,7 @@ TankGame::Draw()
 {
 	tank.Draw();
 	tankEnemy.Draw();
-	for ( int i = 0; i < shells.size(); ++i )
+	for ( uint i = 0; i < shells.size(); ++i )
 	{
 		shells[i].Draw();
 	}
@@ -75,7 +75,7 @@ TankGame::Update(float delta_)
 	tankEnemy.Update(delta_);
 	
 	//update shells
-	for ( int i = 0; i < shells.size(); ++i )
+	for ( uint i = 0; i < shells.size(); ++i )
 	{
 		shells[i].Update(delta_);
 	}
@@ -83,7 +83,7 @@ TankGame::Update(float delta_)
 	//check for collisions
 	
 	//shell colliding with enemy tank
-	for ( int i = 0; i < shells.size(); ++i )
+	for ( uint i = 0; i < shells.size(); ++i )
 	{
 		if ( shells[i].Active() )
 		{

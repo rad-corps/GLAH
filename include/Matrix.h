@@ -32,8 +32,7 @@ struct Matrix3x3
 	static Matrix3x3 CreateTranslationMatrix(Vector3 pos_);
 	static Matrix3x3 CreateScaleMatrix(float scalar_);
 
-	void SetupRotation		(float rotation_);
-	
+	void SetupRotation		(float rotation_);	
 	void SetupTranslation	(Vector3  vec_);
 	void SetupIdentity		();
 	void SetupScale			(float scalar_);

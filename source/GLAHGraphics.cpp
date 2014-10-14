@@ -60,15 +60,15 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 
 	//Setup the translation matrix for the sprite
 	Matrix3x3 translation;
-	translation.SetupTranslation(Vector3(x_, y_, 0.0));
+	translation.SetupTranslation(Vector3((float)x_, (float)y_, 0.0f));
 
 	//Create an entity with position, scale, rotation info
 	GLAHEntity glahEntity;
-	glahEntity.size.x = width_;
-	glahEntity.size.y = height_;
+	glahEntity.size.x = (float)width_;
+	glahEntity.size.y = (float)height_;
 	glahEntity.parentSpriteID = parentSpriteID_;
 	glahEntity.spriteID = texture_handle;
-	glahEntity.position = Vector3(x_, y_, 1);
+	glahEntity.position = Vector3((float)x_, (float)y_, 1.f);
 	glahEntity.origin = originOffset_;
 	//glahEntity.circleColliderRadius = circleColliderRadius_;
 
