@@ -20,7 +20,7 @@ public:
 	Vector3 Position();
 
 private:
-	GLAHGraphics* gfx;
+//	GLAHGraphics* gfx;
 	Vector3 velocity;
 	//Vector3 position;
 	bool active;

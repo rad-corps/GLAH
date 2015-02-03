@@ -19,7 +19,9 @@
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\GLAHGame.cpp" />
     <ClCompile Include="source\Shaders.cpp" />
+    <ClCompile Include="source\SpriteSheet.cpp" />
     <ClCompile Include="source\TankGame.cpp" />
+    <ClCompile Include="source\UVTranslator.cpp" />
     <ClCompile Include="source\Vector.cpp" />
     <ClCompile Include="source\Tank.cpp" />
     <ClCompile Include="source\TankShell.cpp" />
@@ -39,10 +41,12 @@
     <ClInclude Include="include\Matrix.h" />
     <ClInclude Include="include\Shaders.h" />
     <ClInclude Include="include\SOIL.h" />
+    <ClInclude Include="include\SpriteSheet.h" />
     <ClInclude Include="include\TankGame.h" />
     <ClInclude Include="include\TankObserver.h" />
     <ClInclude Include="include\TestMatrix.h" />
     <ClInclude Include="include\TestVectorAngle.h" />
+    <ClInclude Include="include\UVTranslator.h" />
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="include\Vertex.h" />
     <ClInclude Include="include\Tank.h" />

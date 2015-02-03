@@ -7,21 +7,15 @@
 
 using namespace std;
 
-class GLAHGraphics
-{
-public:
-	static GLAHGraphics* Instance();
-	~GLAHGraphics();
 
 	//create a sprite (returns a spriteID)
 	//This also creates a GLAHEntity that maps to the sprite ID
 	//See GLAHEntity for more info
 	unsigned int CreateSprite( const char* textureName_, //the filename/path of the sprite
 								int width_, int height_, //width and height in pixels
-								int x_, int y_,			 //starting positions
+								int x_ = 0, int y_ = 0,			 //starting positions
 								unsigned int parentSpriteID_ = 0, //sprite to parent to (0 if none)
 								Vector3 originOffset_ = Vector3(0.f,0.f,0.f), //rotation origin (bottom left by default)
-								float circleColliderRadius_ = 0.f,
 								SColour colour_ = SColour(0xFF,0xFF,0xFF,0xFF)); //RGBA (white default)
 								
 
@@ -36,9 +30,11 @@ public:
 	
 	//rotate the sprite relative to current rotation
 	void			RotateSpriteRelative			( unsigned int spriteID_, float rotation_ );
-	
+		
+	void			SetSpriteUVCoordinates	( unsigned int a_uiSpriteID, float* a_fUVVec4 );
+
 	//draw the sprite to screen
-	void			DrawSprite				( unsigned int spriteID_);
+	void			DrawSprite				( unsigned int spriteID_, bool xFlip_ = false);
 
 	//Get information about the sprite based on spriteID_ 
 	GLAHEntity		GetGLAHEntity			(unsigned int spriteID_);
@@ -46,7 +42,9 @@ public:
 	//Scale sprite (both x and y scaled by scalar_)
 	void			ScaleSprite				( unsigned int spriteID_, float scalar_ );
 
+	bool			FrameworkUpdate();
 
+	int				Initialise( int a_iWidth, int a_iHeight, bool a_bFullscreen = false, const char* a_pWindowTitle = nullptr );
 
 	//NOT YET IMPLEMENTED
 	void			ClearScreen();	
@@ -59,20 +57,3 @@ public:
 	void			SetFont( const char* fontName_ );
 	void			RemoveFont( const char* fontName_ );
 	//END OF NOT YET IMPLEMENTED
-
-private:
-	
-	//used internally by DrawSprite
-	void CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br);
-	
-	//Create the SpriteMatrix on the fly
-	Matrix3x3		CreateSpriteTransformation	( unsigned int spriteID_ );
-	
-	//contains additional information about sprite rotation, scale, position etc.
-	std::map<unsigned int, GLAHEntity> spriteList;
-
-	//GLAHGraphics singleton
-	GLAHGraphics();
-	static GLAHGraphics* instance;
-};
-

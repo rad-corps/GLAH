@@ -32,7 +32,7 @@ private:
 	Vector2 velocity;
 	Vector2 direction;
 
-	GLAHGraphics* gfx;
+//	GLAHGraphics* gfx;
 	GLAHInput* inpt;
 
 	unsigned int turretSprite;

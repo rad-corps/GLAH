@@ -5,6 +5,7 @@
 #include "Matrix.h"
 #include <math.h>
 #include "GLAHInput.h"
+#include "Shaders.h"
 
 using namespace std;
 

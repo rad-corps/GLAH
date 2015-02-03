@@ -2,40 +2,46 @@
 //Author: Adam Hulbert
 //
 
-#include "GLAHGraphics.h"
 #include <GL/glew.h>
 #include <GL/wglew.h>
+#include "GLAHGraphics.h"
+#include "GLAHInput.h"
+#include "Shaders.h"
 #include <iostream>
 //glfw include
 #include <GLFW/glfw3.h>
 #include "SOIL.h"
 #include "Vertex.h"
+#include <chrono> //std::chrono::time_point
 
-//initialise static member variables
-GLAHGraphics* GLAHGraphics::instance = nullptr;
-
-
-//private ctor
-GLAHGraphics::GLAHGraphics(void)
-{
-}
-
-//TODO - do we need to release all sprites? 
-GLAHGraphics::~GLAHGraphics(void)
-{
-}
+using namespace std::chrono; 
 
 
-//Yes. I am a singleton. Deal with it :)
-GLAHGraphics*
-GLAHGraphics::Instance()
-{
-	if ( instance == nullptr )
-	{
-		instance = new GLAHGraphics();    
-	}
-	return instance;
-}
+//used internally by DrawSprite
+void CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br, float* UV_, bool xFlip_);
+	
+//Create the SpriteMatrix on the fly
+Matrix3x3		CreateSpriteTransformation	( unsigned int spriteID_ );
+	
+//contains additional information about sprite rotation, scale, position etc.
+std::map<unsigned int, GLAHEntity> spriteList;
+
+GLFWwindow* window;
+
+GLuint VBO;
+GLuint IBO;
+
+//timers for delta time
+std::chrono::time_point<high_resolution_clock> timeBegin;
+std::chrono::time_point<high_resolution_clock> timeEnd;
+
+double delta;
+
+	
+
+//orthographic projection matrix
+Matrix4x4 ortho;
+
 
 //unsigned int	GLAHGraphics::CreateSprite	
 // textureName_		: filename/path of the texture to load
@@ -47,12 +53,11 @@ GLAHGraphics::Instance()
 // originOffset_	: the point of rotation, this is relative to the sprites own space. 
 //						Default value is Vector3
 // colour_			: not implemented
-unsigned int GLAHGraphics::CreateSprite	( const char* textureName_, 
+unsigned int CreateSprite	( const char* textureName_, 
 									 int width_, int height_, 
 									 int x_, int y_, 
 									 unsigned int parentSpriteID_, 
 									 Vector3 originOffset_, 
-									 float circleColliderRadius_,
 									 SColour colour_ )
  {
 	//Create the texture and get the handle. 
@@ -70,7 +75,6 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 	glahEntity.spriteID = texture_handle;
 	glahEntity.position = Vector3((float)x_, (float)y_, 1.f);
 	glahEntity.origin = originOffset_;
-	//glahEntity.circleColliderRadius = circleColliderRadius_;
 
 	//add to the spriteList (map) using the texture_handle as the key
 	spriteList[texture_handle] = glahEntity;
@@ -81,7 +85,7 @@ unsigned int GLAHGraphics::CreateSprite	( const char* textureName_,
 
 //returns the transform matrix based on the sprite
 Matrix3x3		
-GLAHGraphics::CreateSpriteTransformation( unsigned int spriteID_ )
+CreateSpriteTransformation( unsigned int spriteID_ )
 {
 	Matrix3x3 translationMat = Matrix3x3::CreateTranslationMatrix(spriteList[spriteID_].position);
 	Matrix3x3 rotationMat = Matrix3x3::CreateRotationMatrix(spriteList[spriteID_].rotation);
@@ -91,13 +95,137 @@ GLAHGraphics::CreateSpriteTransformation( unsigned int spriteID_ )
 
 //modify the scale of the sprite
 void			
-GLAHGraphics::ScaleSprite( unsigned int spriteID_, float scalar_ )
+ScaleSprite( unsigned int spriteID_, float scalar_ )
 {
 	spriteList[spriteID_].scale = scalar_;
 }
 
+void GLAHErroCallback(int errorCode_, const char *errStr_)
+{
+	cout << "GLFW error: " << errStr_ << endl;
+}
+
+//Calculate Delta time (time in miliseconds since last update)
+void CalculateDelta()
+{
+	timeEnd = high_resolution_clock::now();
+	delta =  duration_cast<duration<double>>(timeEnd - timeBegin).count();
+	timeBegin = high_resolution_clock::now();
+}
+
+bool FrameworkUpdate()
+{
+	if (glfwWindowShouldClose(window))
+		return false;
+
+	CalculateDelta();
+
+	//swap front and back buffers
+	glfwSwapBuffers(window);
+ 
+    //poll for and process events
+	glfwPollEvents();
+
+	glClearColor(0.1, 0.1, 0.1, 0.1);
+    glClear(GL_COLOR_BUFFER_BIT);
+ 
+	return true;
+}
+
+int Initialise(int a_iWidth, int a_iHeight, bool a_bFullscreen, const char* a_pWindowTitle  )
+{
+	glfwSetErrorCallback(GLAHErroCallback);
+
+	//Initialise GLFW
+    if(!glfwInit())
+    {
+            return -1;
+    }
+
+	//TODO not currently using a_bFullscreen.
+    //create a windowed mode window and it's OpenGL context    
+    window = glfwCreateWindow(a_iWidth, a_iHeight, a_pWindowTitle, NULL, NULL);
+
+    if(!window)
+    {
+            glfwTerminate();
+            return -1;
+    }
+ 
+    //make the window's context current
+    glfwMakeContextCurrent(window);
+
+	//initialise input lib
+	GLAHInput* input = GLAHInput::Instance();
+	input->Initialise(window);
+ 
+    //init glew
+    if (glewInit() != GLEW_OK)
+    {
+            // OpenGL didn't start-up! shutdown GLFW and return an error code
+            glfwTerminate();
+            return -1;
+    }
+
+	//create shader program
+    GLuint uiProgramFlat = CreateProgram("resources/VertexShader.glsl", "resources/FlatFragmentShader.glsl");
+ 
+    //find the position of the matrix variable in the shader so we can send info there later
+    GLuint MatrixIDFlat = glGetUniformLocation(uiProgramFlat, "MVP");
+ 
+    //set up the mapping of the screen to pixel co-ordinates. Try changing these values to see what happens.	
+    float* orthographicProjection = Matrix4x4::GetOrtho(0.f, (float)a_iWidth, 0.f, (float)a_iHeight, 0.f, 100.f);
+	//float* orthographicProjection2 = getOrtho(0, a_iWidth, 0, a_iHeight, 0, 100);
+	//orthographicProjection = getOrtho(-1, 1, -1, 1, 0, 100);
+
+	//GenerateVBO();
+
+	//create VBO/IBO	
+    glGenBuffers(1, &VBO);                                                                                                                                  //generate VBO
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);                                                                                                             //Binds VBO once
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*4, NULL, GL_STREAM_DRAW);                  //Reserves the memory on graphics card
+    //glBindBuffer(GL_ARRAY_BUFFER, NULL);                                                                                                  //We won't unbind as we'll pass data using glBufferSubData
+    glEnableVertexAttribArray(0);                                                                                                                           //position - location
+    glEnableVertexAttribArray(1);              
+	glEnableVertexAttribArray(2); //texture coordinates//colour
+    glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(1,4,GL_FLOAT,GL_FALSE, sizeof(Vertex), (void*)(sizeof(float)*4));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Vector4)*2));	
+
+	//turn on transparency
+	glEnable(GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//texture filtering
+	//
+ 
+    //if(IBO == NULL)
+    //{
+    //        glGenBuffers(1, &IBO);                                                                                                                                  //generate IBO
+    //        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);                                                     //binds IBO
+    //        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4*sizeof(char), NULL, GL_STATIC_DRAW);                    //reserves memory on graphics card
+    //        GLvoid *iBuffer = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);                          //Gets pointer to space on graphics card
+ 
+    //        ((char*)iBuffer)[0] = 3;                                                                                                                        //Populate indices - done here as only required once.
+    //        ((char*)iBuffer)[1] = 0;
+    //        ((char*)iBuffer)[2] = 2;
+    //        ((char*)iBuffer)[3] = 1;
+ 
+    //        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4*sizeof(char), iBuffer, GL_STATIC_DRAW);                 //copy data to graphics card
+    //        //No need to unbind as IBO is not changing and will be used every call
+    //}	
+
+	glUseProgram(uiProgramFlat); 
+
+	glUniformMatrix4fv(MatrixIDFlat, 1, GL_FALSE, orthographicProjection);
+
+	timeBegin = high_resolution_clock::now();
+
+	return 0;
+}
+
 //GLAH::DrawSprite ( unsigned int spriteID_)
-void GLAHGraphics::DrawSprite(unsigned int spriteID_)
+void DrawSprite(unsigned int spriteID_, bool xFlip_)
 {
 	//get width and height variables
 	GLAHEntity entity = spriteList[spriteID_];
@@ -146,8 +274,9 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 
 	//create the Vertices and send to the GPU
 	Vertex vertices[4];
-	CreateSpriteVertexData(vertices, tl, tr, bl, br);
+	CreateSpriteVertexData(vertices, tl, tr, bl, br, spriteList[spriteID_].UV, xFlip_);
 	glBindTexture(GL_TEXTURE_2D, spriteID_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex)*4, vertices);                                          //Updates VBO's data on the fly 
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
@@ -156,7 +285,7 @@ void GLAHGraphics::DrawSprite(unsigned int spriteID_)
 //spriteID_		: The ID of the sprite to draw
 //x_			: the absolute (world space) x coordinate to draw 
 //y_			: the absolute (world space) y coordinate to draw 
-void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
+void MoveSprite(unsigned int spriteID_, float x_, float y_)
 {
 	spriteList[spriteID_].position = Vector3(x_, y_, 1);
 }
@@ -166,28 +295,35 @@ void GLAHGraphics::MoveSprite(unsigned int spriteID_, float x_, float y_)
 //xMovement_	: The Relative x movement (current x position + xMovement_)
 //yMovement_	: The Relative y movement (current y position + yMovement_)
 //rotation_		: Amount to rotate sprite by expressed as radians (current rotation + rotation_)
-void GLAHGraphics::MoveSpriteRelative(unsigned int spriteID_, float xMovement_, float yMovement_, float rotation_)
+void MoveSpriteRelative(unsigned int spriteID_, float xMovement_, float yMovement_, float rotation_)
 {			
 	Matrix3x3 spriteMat = CreateSpriteTransformation(spriteID_);
 	spriteList[spriteID_].position = spriteMat * Vector3 (xMovement_, yMovement_, 1.f);
 	spriteList[spriteID_].rotation += rotation_;
 }
 
-void GLAHGraphics::RotateSpriteRelative(unsigned int spriteID_, float rotation_ )
+void RotateSpriteRelative(unsigned int spriteID_, float rotation_ )
 {
 	spriteList[spriteID_].rotation += rotation_;
 }
 
-void GLAHGraphics::RotateSprite(unsigned int spriteID_, float rotation_ )
+void RotateSprite(unsigned int spriteID_, float rotation_ )
 {
 	spriteList[spriteID_].rotation = rotation_;
 }
 
-GLAHEntity GLAHGraphics::GetGLAHEntity(unsigned int spriteID_)
+GLAHEntity GetGLAHEntity(unsigned int spriteID_)
 {
 	return spriteList[spriteID_];
 }
 
+void SetSpriteUVCoordinates	( unsigned int spriteID_, float* UVVec4_ )
+{
+	for ( int i = 0; i < 4; ++i )
+	{
+		spriteList[spriteID_].UV[i] = UVVec4_[i];
+	}
+}
 
 //GLAH::CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br)
 //verticesOut_	: a pointer to the vertex array to write to (must have space for 4 vertices)
@@ -195,7 +331,7 @@ GLAHEntity GLAHGraphics::GetGLAHEntity(unsigned int spriteID_)
 //tr			: top right position
 //bl			: bottom left position
 //br			: bottom right position
-void GLAHGraphics::CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br)
+void CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vector3 tr, Vector3 bl, Vector3 br, float* UV_, bool xFlip_)
 {
 	const int VERTICES = 4;
 	
@@ -218,8 +354,19 @@ void GLAHGraphics::CreateSpriteVertexData(Vertex* verticesOut_, Vector3 tl, Vect
 			verticesOut_[i].colour.w = 1.0f;                            //A
     }
 
-	verticesOut_[0].textureCoordinate = Vector2(0.0, 0.0);
-	verticesOut_[1].textureCoordinate = Vector2(0.0, 1.0);
-	verticesOut_[2].textureCoordinate = Vector2(1.0, 1.0);
-	verticesOut_[3].textureCoordinate = Vector2(1.0, 0.0);
+	////THIS IS WHERE TO PROGRAM UV'S!!!!!!!!!
+	if ( !xFlip_ ) 
+	{
+		verticesOut_[3].textureCoordinate = Vector2(UV_[0], UV_[1]); //BL
+		verticesOut_[0].textureCoordinate = Vector2(UV_[0], UV_[3]); //TL
+		verticesOut_[1].textureCoordinate = Vector2(UV_[2], UV_[3]); //TR
+		verticesOut_[2].textureCoordinate = Vector2(UV_[2], UV_[1]); //BR
+	}
+	else
+	{
+		verticesOut_[3].textureCoordinate = Vector2(UV_[2], UV_[1]); //BR
+		verticesOut_[0].textureCoordinate = Vector2(UV_[2], UV_[3]); //TR
+		verticesOut_[1].textureCoordinate = Vector2(UV_[0], UV_[3]); //TL
+		verticesOut_[2].textureCoordinate = Vector2(UV_[0], UV_[1]); //BL
+	}
 }

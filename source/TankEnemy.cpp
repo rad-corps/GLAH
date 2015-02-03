@@ -4,10 +4,10 @@
 
 TankEnemy::TankEnemy(void)
 {
-	gfx = GLAHGraphics::Instance();
+//	gfx = GLAHGraphics::Instance();
 	inpt = GLAHInput::Instance();
 
-	tankSprite = gfx->CreateSprite(
+	tankSprite = CreateSprite(
 		"resources/enemy2_base.png",					//the PNG to load
 		TANK_SPRITE_W, TANK_SPRITE_H,				//width and height of sprite
 		SCREEN_WIDTH/2 -200, SCREEN_HEIGHT/2-200,	//initial x/y position (relative to parent)
@@ -15,7 +15,7 @@ TankEnemy::TankEnemy(void)
 		Vector3(TANK_SPRITE_W/2, TANK_SPRITE_H/2, 0)//rotation origin offset
 		);
 
-	turretSprite = gfx->CreateSprite(
+	turretSprite = CreateSprite(
 		"resources/enemy2_turret.png",				//the PNG to load
 		TANK_SPRITE_W, TANK_SPRITE_H,				//width and height of sprite
 		-0, 0,										//initial x/y position (relative to parent)
@@ -37,8 +37,8 @@ void TankEnemy::Update(float delta_)
 
 void TankEnemy::Draw()
 {
-	gfx->DrawSprite(tankSprite);
-	gfx->DrawSprite(turretSprite);
+	DrawSprite(tankSprite);
+	DrawSprite(turretSprite);
 }
 
 void 
@@ -50,5 +50,5 @@ TankEnemy::AddObserver(TankObserver* observer_)
 Vector3
 TankEnemy::Position()
 {
-	return gfx->GetGLAHEntity(tankSprite).position;
+	return GetGLAHEntity(tankSprite).position;
 }

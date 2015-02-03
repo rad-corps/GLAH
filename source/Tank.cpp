@@ -4,10 +4,10 @@
 
 Tank::Tank(void)
 {
-	gfx = GLAHGraphics::Instance();
+//	gfx = GLAHGraphics::Instance();
 	inpt = GLAHInput::Instance();
 
-	tankSprite = gfx->CreateSprite(
+	tankSprite = CreateSprite(
 		"resources/tank_base.png",					//the PNG to load
 		TANK_SPRITE_W, TANK_SPRITE_H,				//width and height of sprite
 		SCREEN_WIDTH/2, SCREEN_HEIGHT/2,			//initial x/y position (relative to parent)
@@ -15,7 +15,7 @@ Tank::Tank(void)
 		Vector3(TANK_SPRITE_W/2, TANK_SPRITE_H/2, 0)//rotation origin offset
 		);
 
-	turretSprite = gfx->CreateSprite(
+	turretSprite = CreateSprite(
 		"resources/tank_turret.png",				//the PNG to load
 		TANK_SPRITE_W, TANK_SPRITE_H,				//width and height of sprite
 		-0, 0,										//initial x/y position (relative to parent)
@@ -68,7 +68,7 @@ Tank::Update(float delta_)
 		//logic : can we shoot? ammo, reload time
 		if ( timeSinceReload > RELOAD_TIME )
 		{
-			observer->OnShoot(gfx->GetGLAHEntity(tankSprite).position, gfx->GetGLAHEntity(turretSprite).rotation + gfx->GetGLAHEntity(tankSprite).rotation);
+			observer->OnShoot(GetGLAHEntity(tankSprite).position, GetGLAHEntity(turretSprite).rotation + GetGLAHEntity(tankSprite).rotation);
 			timeSinceReload = 0.0f;
 		}
 	}
@@ -78,8 +78,8 @@ Tank::Update(float delta_)
 	tankY *= delta_;
 	rot *= delta_;
 
-	gfx->MoveSpriteRelative(tankSprite, tankX , tankY, rot );
-	gfx->RotateSpriteRelative(turretSprite, turret_rot);
+	MoveSpriteRelative(tankSprite, tankX , tankY, rot );
+	RotateSpriteRelative(turretSprite, turret_rot);
 
 	timeSinceReload += delta_;
 }
@@ -87,8 +87,8 @@ Tank::Update(float delta_)
 void 
 Tank::Draw()
 {
-	gfx->DrawSprite(tankSprite);
-	gfx->DrawSprite(turretSprite);
+	DrawSprite(tankSprite);
+	DrawSprite(turretSprite);
 }
 
 void 

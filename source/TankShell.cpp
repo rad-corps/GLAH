@@ -18,10 +18,10 @@ TankShell::Hit()
 void
 TankShell::Shoot(Vector3 pos_, float dir_)
 {
-	gfx->RotateSprite(spriteID, dir_);
-	gfx->MoveSprite(spriteID, pos_.x, pos_.y);
-	gfx->MoveSpriteRelative(spriteID, -SHELL_OFFSET, 0.f, 0.f);
-	//gfx->RotateSprite(spriteID, PI);
+	RotateSprite(spriteID, dir_);
+	MoveSprite(spriteID, pos_.x, pos_.y);
+	MoveSpriteRelative(spriteID, -SHELL_OFFSET, 0.f, 0.f);
+	//RotateSprite(spriteID, PI);
 	velocity = Vector3(1.0f, 1.0f, 0.0f);
 	velocity.SetAngle(dir_);	
 	velocity.Normalise();
@@ -33,9 +33,9 @@ TankShell::Shoot(Vector3 pos_, float dir_)
 
 //dont want to use this constructor, but the vector may need it to reserve space
 TankShell::TankShell(){
-	gfx = GLAHGraphics::Instance();
+//	gfx = GLAHGraphics::Instance();
 
-	spriteID = gfx->CreateSprite(
+	spriteID = CreateSprite(
 		"resources/TankShell1.png",					//the PNG to load
 		SHELL_W, SHELL_H,							//width and height of sprite
 		0, 0,										//initial x/y position (relative to parent)
@@ -44,7 +44,7 @@ TankShell::TankShell(){
 		Vector3(SHELL_W/2, SHELL_H/2, 0)//rotation origin offset
 		);
 
-	gfx->ScaleSprite(spriteID, SHELL_SCALAR);
+	ScaleSprite(spriteID, SHELL_SCALAR);
 	
 	active = false;
 }
@@ -58,7 +58,7 @@ void
 TankShell::Draw()
 {
 	if ( active )
-		gfx->DrawSprite(spriteID);
+		DrawSprite(spriteID);
 }
 
 void 
@@ -66,7 +66,7 @@ TankShell::Update(float delta_)
 {
 	if ( active )
 	{
-		gfx->MoveSpriteRelative(spriteID, -SHELL_VELOCITY*delta_, 0, 0);
+		MoveSpriteRelative(spriteID, -SHELL_VELOCITY*delta_, 0, 0);
 
 		activeFor += delta_;
 
@@ -81,5 +81,5 @@ TankShell::Update(float delta_)
 Vector3
 TankShell::Position()
 {
-	return gfx->GetGLAHEntity(spriteID).position;
+	return GetGLAHEntity(spriteID).position;
 }
